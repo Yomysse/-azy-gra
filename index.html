@@ -7,17 +7,15 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
     body { overflow: hidden; background: #030508; color: #e2e8f0; user-select: none; }
     #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
-
-    /* Kinowa winieta i delikatne ziarno kamery nocnej */
     #vignette {
       position: fixed; inset: 0; pointer-events: none; z-index: 5;
-      background: radial-gradient(circle at center, transparent 52%, rgba(2, 4, 8, 0.88) 100%);
+      background: radial-gradient(circle at center, transparent 54%, rgba(2, 4, 8, 0.88) 100%);
     }
 
     #mission-box {
       position: absolute; top: 18px; left: 18px; width: 380px;
-      background: rgba(6, 10, 16, 0.84); border-left: 3px solid #eab308;
-      padding: 14px 18px; border-radius: 0 6px 6px 0; box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+      background: rgba(6, 10, 16, 0.86); border-left: 3px solid #eab308;
+      padding: 14px 18px; border-radius: 0 6px 6px 0; box-shadow: 0 8px 25px rgba(0,0,0,0.75);
     }
     #mission-header { display: flex; justify-content: space-between; align-items: center; }
     #mission-header h1 { font-size: 13px; letter-spacing: 1.3px; color: #facc15; text-transform: uppercase; }
@@ -27,13 +25,13 @@
 
     #team-box {
       position: absolute; top: 18px; right: 18px; pointer-events: auto; width: 280px;
-      background: rgba(6, 10, 16, 0.84); border: 1px solid #1e293b;
+      background: rgba(6, 10, 16, 0.86); border: 1px solid #1e293b;
       padding: 12px 14px; border-radius: 6px;
     }
     #team-box h2 { font-size: 11px; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; }
     .member-row {
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(15, 23, 42, 0.75); padding: 5px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 4px;
+      background: rgba(15, 23, 42, 0.78); padding: 5px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 4px;
     }
     .member-role { font-size: 10px; color: #38bdf8; }
     #p2p-controls input, #p2p-controls button {
@@ -46,10 +44,9 @@
     #minimap-wrap {
       width: 155px; height: 155px; border-radius: 50%; overflow: hidden;
       border: 2px solid rgba(56, 189, 248, 0.45); background: rgba(4, 7, 12, 0.94);
-      box-shadow: 0 0 20px rgba(0,0,0,0.85);
     }
     #vitals-box {
-      background: rgba(6, 10, 16, 0.84); border: 1px solid #1e293b;
+      background: rgba(6, 10, 16, 0.86); border: 1px solid #1e293b;
       padding: 10px 14px; border-radius: 6px; width: 210px;
     }
     .vital-row { margin-bottom: 7px; }
@@ -63,11 +60,11 @@
 
     #inventory-bar {
       position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 8px; background: rgba(6, 10, 16, 0.86);
+      display: flex; gap: 8px; background: rgba(6, 10, 16, 0.88);
       padding: 8px 12px; border-radius: 8px; border: 1px solid #1e293b;
     }
     .inv-slot {
-      width: 84px; height: 68px; background: rgba(15, 23, 42, 0.85); border: 1px solid #334155;
+      width: 84px; height: 68px; background: rgba(15, 23, 42, 0.88); border: 1px solid #334155;
       border-radius: 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 6px;
     }
     .inv-slot.active { border-color: #facc15; transform: translateY(-4px); }
@@ -82,14 +79,14 @@
 
     #hand-hud {
       position: absolute; bottom: 18px; right: 18px; text-align: right;
-      background: rgba(6, 10, 16, 0.84); padding: 10px 15px; border-radius: 6px; border-right: 3px solid #38bdf8;
+      background: rgba(6, 10, 16, 0.86); padding: 10px 15px; border-radius: 6px; border-right: 3px solid #38bdf8;
     }
     #hand-item-title { font-size: 14px; font-weight: bold; color: #f8fafc; }
     #hand-item-sub { font-size: 12px; color: #94a3b8; font-family: monospace; margin-top: 2px; }
 
     #crosshair {
       position: absolute; top: 50%; left: 50%; width: 4px; height: 4px;
-      background: rgba(255,255,255,0.75); border-radius: 50%; transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.8); border-radius: 50%; transform: translate(-50%, -50%);
     }
     #interact-prompt {
       position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%);
@@ -141,7 +138,7 @@
 <body>
 
 <div id="vignette"></div>
-<div id="status-bar">Generowanie tekstur PBR osiedla przy ul. Papierowej...</div>
+<div id="status-bar">Budowanie proceduralnego świata Łaz (ul. Papierowa, Kwiatowa, Al. Krakowska)...</div>
 
 <div id="start-screen">
   <h1 style="color:#facc15; letter-spacing:2px; font-size:28px;">MARTWA CZĘSTOTLIWOŚĆ</h1>
@@ -200,7 +197,7 @@
       <span id="world-clock">17:15 (Zmierzch / Mgła)</span>
     </div>
     <div id="mission-act">AKT I: Cisza na osiedlu</div>
-    <p id="mission-desc">Jesteście na dziedzińcu białych szeregówek przy ul. Papierowej. Przeszukajcie okolicę pomp ciepła, skrzynek pocztowych i zaparkowanych aut (kliknij na ekran, aby rozglądać się myszką).</p>
+    <p id="mission-desc">Jesteście na dziedzińcu białych szeregówek przy ul. Papierowej. Przeszukajcie auta, skrzynki pocztowe oraz wejdźcie do otwartego Segmentu nr 4 na końcu prawego rzędu.</p>
   </div>
 
   <div id="team-box">
@@ -267,8 +264,7 @@
 <script>
 const statusBar = document.getElementById('status-bar');
 window.onerror = function(msg) {
-  statusBar.style.background = '#991b1b';
-  statusBar.style.color = '#fff';
+  statusBar.style.background = '#991b1b'; statusBar.style.color = '#fff';
   statusBar.innerText = 'Błąd: ' + msg;
 };
 
@@ -284,14 +280,11 @@ const ITEM_CATALOG = {
   shotgun: { name: 'Strzelba Mossberg', type: 'weapon', maxAmmo: 6, hint: 'LPM: Strzał śrutem' },
   flare: { name: 'Flara Czerwona', type: 'consumable', hint: 'LPM: Rzuć flarę (oślepia anomalie na 40s)' },
   nvg: { name: 'Gogle Noktowizyjne', type: 'toggle', hint: 'LPM: Noktowizja' },
-  boltcutters: { name: 'Nożyce do metalu', type: 'keyitem', hint: 'Przecinają kłódkę przy lesie sosnowym' },
   keycard_bunker: { name: 'Karta Masztu (Poz. 2)', type: 'keyitem', hint: 'Otwiera właz pod masztem przy Al. Krakowskiej' },
   fuse: { name: 'Bezpiecznik 40A', type: 'keyitem', hint: 'Uruchamia generator w bunkrze' },
   bandage: { name: 'Bandaż Taktyczny', type: 'heal', hint: 'LPM: Leczy +45% HP' },
-  adrenaline: { name: 'Adrenalina', type: 'buff', hint: 'LPM: Pełna kondycja przez 30s' },
   battery: { name: 'Baterie Alkaliczne', type: 'battery', hint: 'LPM: Ładuje latarkę do 100%' },
-  tape_1: { name: 'Kaseta Dyktafonu #1', type: 'evidence', hint: 'LPM: Odsłuchaj nagranie z Segmentu nr 4' },
-  polaroid_1: { name: 'Zdjęcie Polaroid', type: 'evidence', hint: 'LPM: Obejrzyj zdjęcie z warsztatu' }
+  tape_1: { name: 'Kaseta Dyktafonu #1', type: 'evidence', hint: 'LPM: Odsłuchaj nagranie z Segmentu nr 4' }
 };
 
 const player = {
@@ -305,16 +298,15 @@ function selectClass(clsKey, el) {
   player.playerClass = clsKey;
 }
 
-// 1. GENERATOR TEKSTUR PBR (Mokra kostka z kałużami, tynk strukturalny, słoje drewna, siatka ogrodzeniowa, soczewka latarki)
+// 1. GENERATOR TEKSTUR PBR I SPRAJTÓW
 function createPBRTextures() {
-  // A) Kostka brukowa + mapa chropowatości z kałużami
   const cDiff = document.createElement('canvas'); cDiff.width = 512; cDiff.height = 512;
   const ctxD = cDiff.getContext('2d');
   const cRough = document.createElement('canvas'); cRough.width = 512; cRough.height = 512;
   const ctxR = cRough.getContext('2d');
 
   ctxD.fillStyle = '#14171c'; ctxD.fillRect(0, 0, 512, 512);
-  ctxR.fillStyle = '#d8d8d8'; ctxR.fillRect(0, 0, 512, 512); // Domyślnie matowa kostka
+  ctxR.fillStyle = '#d8d8d8'; ctxR.fillRect(0, 0, 512, 512);
 
   for (let y = 0; y < 512; y += 32) {
     const off = (y / 32) % 2 === 0 ? 0 : 32;
@@ -322,26 +314,16 @@ function createPBRTextures() {
       const shade = 42 + ((x * 7 + y * 13) % 18);
       ctxD.fillStyle = `rgb(${shade},${shade + 3},${shade + 7})`;
       ctxD.fillRect(x + off + 2, y + 2, 60, 28);
-      // Subtelny szum ziarna na kostce
-      for (let n = 0; n < 25; n++) {
-        ctxD.fillStyle = n % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.12)';
-        ctxD.fillRect(x + off + 4 + (n * 11) % 54, y + 4 + (n * 7) % 22, 2, 2);
-      }
     }
   }
 
-  // Kałuże na kostce (ciemniejsze w kolorze, lustrzane w roughnessMap)
-  const puddles = [[140, 160, 95], [370, 340, 115], [260, 90, 65], [90, 410, 80]];
-  puddles.forEach(([px, py, r]) => {
+  [[140, 160, 95], [370, 340, 115], [260, 90, 65], [90, 410, 80]].forEach(([px, py, r]) => {
     const gradD = ctxD.createRadialGradient(px, py, 5, px, py, r);
-    gradD.addColorStop(0, 'rgba(10, 14, 20, 0.65)');
-    gradD.addColorStop(1, 'rgba(10, 14, 20, 0)');
+    gradD.addColorStop(0, 'rgba(10, 14, 20, 0.65)'); gradD.addColorStop(1, 'rgba(10, 14, 20, 0)');
     ctxD.fillStyle = gradD; ctxD.beginPath(); ctxD.arc(px, py, r, 0, Math.PI * 2); ctxD.fill();
 
     const gradR = ctxR.createRadialGradient(px, py, 5, px, py, r);
-    gradR.addColorStop(0, '#0a0a0a'); // Lustrzane odbicie wody
-    gradR.addColorStop(0.75, '#222222');
-    gradR.addColorStop(1, 'rgba(216,216,216,0)');
+    gradR.addColorStop(0, '#0a0a0a'); gradR.addColorStop(0.75, '#222222'); gradR.addColorStop(1, 'rgba(216,216,216,0)');
     ctxR.fillStyle = gradR; ctxR.beginPath(); ctxR.arc(px, py, r, 0, Math.PI * 2); ctxR.fill();
   });
 
@@ -350,7 +332,6 @@ function createPBRTextures() {
   cobbleMap.wrapS = cobbleMap.wrapT = cobbleRough.wrapS = cobbleRough.wrapT = THREE.RepeatWrapping;
   cobbleMap.repeat.set(75, 75); cobbleRough.repeat.set(75, 75);
 
-  // B) Ziarnisty biały tynk strukturalny szeregówek
   const cPlaster = document.createElement('canvas'); cPlaster.width = 512; cPlaster.height = 512;
   const ctxP = cPlaster.getContext('2d');
   ctxP.fillStyle = '#cfd6de'; ctxP.fillRect(0, 0, 512, 512);
@@ -360,10 +341,8 @@ function createPBRTextures() {
     ctxP.fillRect((i * 73) % 512, (i * 137) % 512, 2, 2);
   }
   const plasterTex = new THREE.CanvasTexture(cPlaster);
-  plasterTex.wrapS = plasterTex.wrapT = THREE.RepeatWrapping;
-  plasterTex.repeat.set(4, 2);
+  plasterTex.wrapS = plasterTex.wrapT = THREE.RepeatWrapping; plasterTex.repeat.set(4, 2);
 
-  // C) Drewniane deski elewacyjne (słoje drewna)
   const cWood = document.createElement('canvas'); cWood.width = 256; cWood.height = 512;
   const ctxW = cWood.getContext('2d');
   ctxW.fillStyle = '#6e3b16'; ctxW.fillRect(0, 0, 256, 512);
@@ -376,30 +355,14 @@ function createPBRTextures() {
   }
   const woodTex = new THREE.CanvasTexture(cWood);
 
-  // D) Ogrodzenie panelowe z siatki (przezroczyste oczka)
   const cFence = document.createElement('canvas'); cFence.width = 256; cFence.height = 256;
   const ctxF = cFence.getContext('2d');
-  ctxF.clearRect(0, 0, 256, 256);
-  ctxF.strokeStyle = '#334155'; ctxF.lineWidth = 4;
+  ctxF.clearRect(0, 0, 256, 256); ctxF.strokeStyle = '#334155'; ctxF.lineWidth = 4;
   for (let x = 0; x <= 256; x += 16) { ctxF.beginPath(); ctxF.moveTo(x, 0); ctxF.lineTo(x, 256); ctxF.stroke(); }
   for (let y = 0; y <= 256; y += 32) { ctxF.beginPath(); ctxF.moveTo(0, y); ctxF.lineTo(256, y); ctxF.stroke(); }
   const fenceTex = new THREE.CanvasTexture(cFence);
-  fenceTex.wrapS = fenceTex.wrapT = THREE.RepeatWrapping;
-  fenceTex.repeat.set(3, 1);
+  fenceTex.wrapS = fenceTex.wrapT = THREE.RepeatWrapping; fenceTex.repeat.set(3, 1);
 
-  // E) Projekcja soczewki latarki taktycznej (pierścienie LED)
-  const cBeam = document.createElement('canvas'); cBeam.width = 256; cBeam.height = 256;
-  const ctxB = cBeam.getContext('2d');
-  const gBeam = ctxB.createRadialGradient(128, 128, 8, 128, 128, 124);
-  gBeam.addColorStop(0, 'rgba(255, 252, 240, 1)');
-  gBeam.addColorStop(0.45, 'rgba(235, 242, 255, 0.72)');
-  gBeam.addColorStop(0.72, 'rgba(180, 200, 230, 0.25)');
-  gBeam.addColorStop(0.82, 'rgba(220, 235, 255, 0.42)'); // Pierścień odbłyśnika
-  gBeam.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  ctxB.fillStyle = gBeam; ctxB.fillRect(0, 0, 256, 256);
-  const beamTex = new THREE.CanvasTexture(cBeam);
-
-  // F) Poświata latarni ulicznych we mgle
   const cGlow = document.createElement('canvas'); cGlow.width = 128; cGlow.height = 128;
   const ctxG = cGlow.getContext('2d');
   const gGlow = ctxG.createRadialGradient(64, 64, 2, 64, 64, 62);
@@ -409,7 +372,7 @@ function createPBRTextures() {
   ctxG.fillStyle = gGlow; ctxG.fillRect(0, 0, 128, 128);
   const glowTex = new THREE.CanvasTexture(cGlow);
 
-  return { cobbleMap, cobbleRough, plasterTex, woodTex, fenceTex, beamTex, glowTex };
+  return { cobbleMap, cobbleRough, plasterTex, woodTex, fenceTex, glowTex };
 }
 
 function makeSignTex(text, bg = '#14532d', fg = '#f8fafc') {
@@ -422,7 +385,28 @@ function makeSignTex(text, bg = '#14532d', fg = '#f8fafc') {
   return new THREE.CanvasTexture(c);
 }
 
-// 2. INICJALIZACJA SCENY I KAMERY
+// 2. SYSTEM KOLIZJI AABB
+const colliders = [];
+function addCollider(cx, cz, width, depth, interiorKey = null) {
+  colliders.push({
+    minX: cx - width / 2 - 0.38,
+    maxX: cx + width / 2 + 0.38,
+    minZ: cz - depth / 2 - 0.38,
+    maxZ: cz + depth / 2 + 0.38,
+    interior: interiorKey
+  });
+}
+
+function canMoveTo(nx, nz, currentInterior) {
+  for (let i = 0; i < colliders.length; i++) {
+    const b = colliders[i];
+    if (b.interior !== currentInterior) continue;
+    if (nx > b.minX && nx < b.maxX && nz > b.minZ && nz < b.maxZ) return false;
+  }
+  return true;
+}
+
+// 3. SCENA, KAMERA, LATARKA I BROŃ FPP
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 450);
 camera.position.set(0, 1.72, 7.5);
@@ -430,7 +414,7 @@ camera.rotation.order = 'YXZ';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Optymalizacja pod MX350
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -445,7 +429,6 @@ window.addEventListener('resize', () => {
 
 const tex = createPBRTextures();
 
-// Latarka taktyczna (po lewej stronie ekranu) + Pistolet Glock-17 (po prawej stronie)
 const flashlight = new THREE.SpotLight(0xf8fafc, 3.2, 58, Math.PI / 5.4, 0.45, 1.15);
 flashlight.castShadow = true;
 flashlight.shadow.mapSize.set(1024, 1024);
@@ -457,49 +440,29 @@ flashlight.target.position.set(-0.08, -0.22, -12);
 scene.add(camera);
 
 const handsGroup = new THREE.Group();
-// Szczegółowy model latarki w lewej ręce
-const torchBody = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.022, 0.024, 0.22, 16),
-  new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.85, roughness: 0.25 })
-);
-torchBody.rotation.x = Math.PI / 2;
-torchBody.position.set(-0.25, -0.22, -0.38);
-const torchHead = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.032, 0.024, 0.06, 16),
-  new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 })
-);
-torchHead.rotation.x = Math.PI / 2;
-torchHead.position.set(-0.25, -0.22, -0.50);
+const torchBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.22, 16), new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.85, roughness: 0.25 }));
+torchBody.rotation.x = Math.PI / 2; torchBody.position.set(-0.25, -0.22, -0.38);
+const torchHead = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.024, 0.06, 16), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 }));
+torchHead.rotation.x = Math.PI / 2; torchHead.position.set(-0.25, -0.22, -0.50);
 handsGroup.add(torchBody, torchHead);
 
-// Szczegółowy model pistoletu z tłumikiem w prawej ręce
 const gunGroup = new THREE.Group();
 const gunMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.88, roughness: 0.22 });
-const gunSlide = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.044, 0.22), gunMat);
-gunSlide.position.set(0.24, -0.20, -0.40);
-const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.13, 12), gunMat);
-gunBarrel.rotation.x = Math.PI / 2; gunBarrel.position.set(0.24, -0.195, -0.56);
-const gunGrip = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.11, 0.045), new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.9 }));
-gunGrip.position.set(0.24, -0.26, -0.33); gunGrip.rotation.x = 0.24;
-const muzzleFlash = new THREE.PointLight(0xf59e0b, 0, 12);
-muzzleFlash.position.set(0.24, -0.19, -0.66);
+const gunSlide = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.044, 0.22), gunMat); gunSlide.position.set(0.24, -0.20, -0.40);
+const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.13, 12), gunMat); gunBarrel.rotation.x = Math.PI / 2; gunBarrel.position.set(0.24, -0.195, -0.56);
+const gunGrip = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.11, 0.045), new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.9 })); gunGrip.position.set(0.24, -0.26, -0.33); gunGrip.rotation.x = 0.24;
+const muzzleFlash = new THREE.PointLight(0xf59e0b, 0, 12); muzzleFlash.position.set(0.24, -0.19, -0.66);
 gunGroup.add(gunSlide, gunBarrel, gunGrip, muzzleFlash);
 gunGroup.visible = false;
 handsGroup.add(gunGroup);
 camera.add(handsGroup);
 
-// 3. MROCZNY ŚWIAT ŁAZ (Chłodny zmierzch -> Gęsta ponura noc)
-const worldState = { isInside: false, currentInterior: null, elapsedMinutes: 0, streetLamps: [], interactables: [] };
-const itemsState = { act: 1, hasPowerInBunker: false, uvMode: false, nvgMode: false, worldDrops: [] };
+// 4. ŚWIAT ŁAZ (Szeregówki ul. Papierowa, ul. Kwiatowa, Aleja Krakowska, Las, Maszt)
+const worldState = { isInside: false, currentInterior: null, elapsedMinutes: 0, interactables: [] };
+const itemsState = { act: 1, uvMode: false, nvgMode: false, activeFlares: [], worldDrops: [] };
 
-// Brak jaskrawego pomarańczowego światła! Chłodny, pochmurny zmierzch nad Łazami
-const moonLight = new THREE.DirectionalLight(0x64748b, 0.55);
-moonLight.position.set(-60, 45, 40);
-moonLight.castShadow = true;
-scene.add(moonLight);
-
-const hemiLight = new THREE.HemisphereLight(0x334155, 0x090d16, 0.42);
-scene.add(hemiLight);
+const moonLight = new THREE.DirectionalLight(0x64748b, 0.55); moonLight.position.set(-60, 45, 40); moonLight.castShadow = true; scene.add(moonLight);
+const hemiLight = new THREE.HemisphereLight(0x334155, 0x090d16, 0.42); scene.add(hemiLight);
 
 scene.background = new THREE.Color(0x0d131c);
 scene.fog = new THREE.FogExp2(0x0d131c, 0.022);
@@ -507,31 +470,27 @@ scene.fog = new THREE.FogExp2(0x0d131c, 0.022);
 const exteriorGroup = new THREE.Group();
 scene.add(exteriorGroup);
 
-// Mokra kostka brukowa z kałużami
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(550, 550),
-  new THREE.MeshStandardMaterial({
-    map: tex.cobbleMap,
-    bumpMap: tex.cobbleMap,
-    bumpScale: 0.03,
-    roughnessMap: tex.cobbleRough,
-    roughness: 0.75,
-    metalness: 0.35
-  })
+  new THREE.MeshStandardMaterial({ map: tex.cobbleMap, bumpMap: tex.cobbleMap, bumpScale: 0.03, roughnessMap: tex.cobbleRough, roughness: 0.75, metalness: 0.35 })
 );
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
 exteriorGroup.add(ground);
 
-// Pas Alei Krakowskiej
-const aleja = new THREE.Mesh(
-  new THREE.PlaneGeometry(500, 22),
-  new THREE.MeshStandardMaterial({ color: 0x0b0e14, roughness: 0.18, metalness: 0.65 })
-);
+const curbMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.85 });
+const sidewalkLeft = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 62), curbMat); sidewalkLeft.position.set(-3.4, 0.07, 36);
+const sidewalkRight = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 62), curbMat); sidewalkRight.position.set(3.4, 0.07, 36);
+exteriorGroup.add(sidewalkLeft, sidewalkRight);
+
+const aleja = new THREE.Mesh(new THREE.PlaneGeometry(500, 22), new THREE.MeshStandardMaterial({ color: 0x0b0e14, roughness: 0.18, metalness: 0.65 }));
 aleja.rotation.x = -Math.PI / 2; aleja.position.set(0, 0.02, 75);
 exteriorGroup.add(aleja);
+for (let lx = -120; lx <= 120; lx += 10) {
+  const dash = new THREE.Mesh(new THREE.PlaneGeometry(4.5, 0.25), new THREE.MeshBasicMaterial({ color: 0x94a3b8 }));
+  dash.rotation.x = -Math.PI / 2; dash.position.set(lx, 0.04, 75);
+  exteriorGroup.add(dash);
+}
 
-// SZEREGÓWKI PRZY UL. PAPIEROWEJ (Wierny układ z Twoich zdjęć z Otodom)
 function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
   const group = new THREE.Group();
   group.position.set(x, 0, z); group.rotation.y = rotY;
@@ -541,19 +500,16 @@ function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
   const roofMat = new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.55, metalness: 0.3 });
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
   const glassDark = new THREE.MeshStandardMaterial({ color: 0x050911, roughness: 0.08, metalness: 0.92 });
-  const glassWarm = new THREE.MeshStandardMaterial({ color: 0x1e1b18, emissive: 0x78350f, emissiveIntensity: 0.35, roughness: 0.15 });
+  const glassWarm = new THREE.MeshStandardMaterial({ color: 0x1e1b18, emissive: 0x78350f, emissiveIntensity: 0.4, roughness: 0.15 });
   const pumpMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.55, roughness: 0.35 });
   const fenceMat = new THREE.MeshStandardMaterial({ map: tex.fenceTex, transparent: true, alphaTest: 0.3, side: THREE.DoubleSide });
 
   const segW = 5.4, totalW = segW * segments;
-
-  // Główna bryła z cokołem
   const body = new THREE.Mesh(new THREE.BoxGeometry(totalW, 6.2, 9.6), plasterMat);
-  body.position.set(0, 3.1, 0);
-  body.castShadow = true; body.receiveShadow = true;
+  body.position.set(0, 3.1, 0); body.castShadow = true; body.receiveShadow = true;
   group.add(body);
+  addCollider(x, z, 9.6, totalW, null);
 
-  // Dwuspadowy grafitowy dach z gzymsem
   const roofShape = new THREE.Shape();
   roofShape.moveTo(-5.05, 0); roofShape.lineTo(0, 2.4); roofShape.lineTo(5.05, 0); roofShape.closePath();
   const roof = new THREE.Mesh(new THREE.ExtrudeGeometry(roofShape, { depth: totalW + 0.4, bevelEnabled: false }), roofMat);
@@ -562,48 +518,26 @@ function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
 
   for (let i = 0; i < segments; i++) {
     const sx = -totalW / 2 + segW * (i + 0.5);
+    const woodStrip = new THREE.Mesh(new THREE.BoxGeometry(0.96, 5.4, 0.08), woodMat); woodStrip.position.set(sx - 0.85, 3.1, 4.82);
 
-    // Pionowa drewniana wstawka elewacyjna (jak na zdjęciach)
-    const woodStrip = new THREE.Mesh(new THREE.BoxGeometry(0.96, 5.4, 0.08), woodMat);
-    woodStrip.position.set(sx - 0.85, 3.1, 4.82);
+    const winTopFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.92, 0.12), frameMat); winTopFrame.position.set(sx - 1.45, 4.45, 4.82);
+    const isLit = (houseIndexOffset + i === 4);
+    const winTopGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.78, 0.14), isLit ? glassWarm : glassDark); winTopGlass.position.set(sx - 1.45, 4.45, 4.83);
 
-    // Okno na piętrze z ramą i parapetem
-    const winTopFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.92, 0.12), frameMat);
-    winTopFrame.position.set(sx - 1.45, 4.45, 4.82);
-    const isLit = (houseIndexOffset + i === 4); // W Segmencie nr 4 pali się przytłumione światło na piętrze!
-    const winTopGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.78, 0.14), isLit ? glassWarm : glassDark);
-    winTopGlass.position.set(sx - 1.45, 4.45, 4.83);
+    const winBotFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.72, 0.12), frameMat); winBotFrame.position.set(sx + 1.15, 1.5, 4.82);
+    const winBotGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.58, 0.14), glassDark); winBotGlass.position.set(sx + 1.15, 1.5, 4.83);
 
-    // Okno na parterze z ramą
-    const winBotFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.72, 0.12), frameMat);
-    winBotFrame.position.set(sx + 1.15, 1.5, 4.82);
-    const winBotGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.58, 0.14), glassDark);
-    winBotGlass.position.set(sx + 1.15, 1.5, 4.83);
+    const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.14, 2.22, 0.14), frameMat); doorFrame.position.set(sx - 0.2, 1.11, 4.82);
+    const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.12, 0.16), woodMat); doorLeaf.position.set(sx - 0.2, 1.08, 4.83);
+    const canopy = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.14, 1.0), roofMat); canopy.position.set(sx - 0.2, 2.42, 5.25);
 
-    // Drzwi wejściowe z ościeżnicą, klamką i zadaszeniem
-    const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.14, 2.22, 0.14), frameMat);
-    doorFrame.position.set(sx - 0.2, 1.11, 4.82);
-    const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.12, 0.16), woodMat);
-    doorLeaf.position.set(sx - 0.2, 1.08, 4.83);
-    const canopy = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.14, 1.0), roofMat);
-    canopy.position.set(sx - 0.2, 2.42, 5.25);
+    const gutter = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 6.2, 8), frameMat); gutter.position.set(sx + segW / 2, 3.1, 4.88);
+    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.96, 1.12, 0.44), pumpMat); pump.position.set(sx + 1.55, 0.56, 5.32); pump.castShadow = true;
+    const fanGrill = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 16), frameMat); fanGrill.rotation.x = Math.PI / 2; fanGrill.position.set(sx + 1.4, 0.62, 5.55);
+    const gardenFence = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.35), fenceMat); gardenFence.position.set(sx + 1.3, 0.68, 6.4);
+    const porchLamp = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.14), new THREE.MeshBasicMaterial({ color: 0xfef08a })); porchLamp.position.set(sx - 0.9, 2.0, 4.88);
 
-    // Rynna spustowa między segmentami
-    const gutter = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 6.2, 8), frameMat);
-    gutter.position.set(sx + segW / 2, 3.1, 4.88);
-
-    // Jednostka zewnętrzna pompy ciepła z kratką wentylatora
-    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.96, 1.12, 0.44), pumpMat);
-    pump.position.set(sx + 1.55, 0.56, 5.32);
-    pump.castShadow = true;
-    const fanGrill = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 16), frameMat);
-    fanGrill.rotation.x = Math.PI / 2; fanGrill.position.set(sx + 1.4, 0.62, 5.55);
-
-    // Metalowe ogrodzenie panelowe ogródka przed wejściem
-    const gardenFence = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.35), fenceMat);
-    gardenFence.position.set(sx + 1.3, 0.68, 6.4);
-
-    group.add(woodStrip, winTopFrame, winTopGlass, winBotFrame, winBotGlass, doorFrame, doorLeaf, canopy, gutter, pump, fanGrill, gardenFence);
+    group.add(woodStrip, winTopFrame, winTopGlass, winBotFrame, winBotGlass, doorFrame, doorLeaf, canopy, gutter, pump, fanGrill, gardenFence, porchLamp);
 
     if (houseIndexOffset + i === 4) {
       const doorWorldPos = new THREE.Vector3(sx - 0.2, 1.2, 5.8);
@@ -618,90 +552,104 @@ function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
 buildTerracedBlock(10.8, -2, -Math.PI / 2, 4, 1);
 buildTerracedBlock(-10.8, -2, Math.PI / 2, 4, 5);
 
-// Skrzynki pocztowe przy bramie wjazdowej na dziedziniec
-const mailboxBank = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.38, 2.3), new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.65, roughness: 0.35 }));
-mailboxBank.position.set(5.3, 0.69, 9.5);
-exteriorGroup.add(mailboxBank);
+const mailboxBank = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.38, 2.3), new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.65 }));
+mailboxBank.position.set(5.3, 0.69, 9.5); addCollider(5.3, 9.5, 0.5, 2.3, null);
+const trashBin = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.05, 0.72), new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.6 }));
+trashBin.position.set(-5.2, 0.52, 8.8); addCollider(-5.2, 8.8, 0.7, 0.75, null);
+exteriorGroup.add(mailboxBank, trashBin);
 
-// Zaparkowane auta z reflektorami pozycyjnymi
-function buildParkedCar(x, z, rotY, colorHex) {
+// Wymodelowane samochody z kołami, felgami, szybami i światłami
+function buildDetailedCar(x, z, rotY, colorHex) {
   const car = new THREE.Group();
   car.position.set(x, 0, z); car.rotation.y = rotY;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.72, 4.25), new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.8, roughness: 0.22 }));
-  body.position.y = 0.62; body.castShadow = true;
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.58, 2.15), new THREE.MeshStandardMaterial({ color: 0x050911, metalness: 0.92, roughness: 0.08 }));
-  cabin.position.set(0, 1.22, -0.2);
-  car.add(body, cabin);
-  exteriorGroup.add(car);
-}
-buildParkedCar(4.6, 2.5, Math.PI / 2, 0x64748b);
-buildParkedCar(4.6, -2.2, Math.PI / 2, 0x111827);
+  const paintMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.82, roughness: 0.18 });
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x050911, metalness: 0.95, roughness: 0.05 });
+  const tireMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.2 });
 
-// Wielowarstwowe sosny za osiedlem (zamiast jednego stożka)
+  const chassis = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.56, 4.35), paintMat); chassis.position.y = 0.56; chassis.castShadow = true;
+  const cabinShape = new THREE.Shape();
+  cabinShape.moveTo(-1.15, 0); cabinShape.lineTo(-0.75, 0.56); cabinShape.lineTo(0.65, 0.56); cabinShape.lineTo(1.05, 0); cabinShape.closePath();
+  const cabin = new THREE.Mesh(new THREE.ExtrudeGeometry(cabinShape, { depth: 1.54, bevelEnabled: true, bevelSize: 0.04, bevelThickness: 0.04 }), glassMat);
+  cabin.rotation.y = Math.PI / 2; cabin.position.set(-0.77, 0.84, -0.1);
+  const roofPanel = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.06, 1.42), paintMat); roofPanel.position.set(0, 1.42, -0.15);
+
+  [[-0.92, 0.36, 1.32], [0.92, 0.36, 1.32], [-0.92, 0.36, -1.32], [0.92, 0.36, -1.32]].forEach(([wx, wy, wz]) => {
+    const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.24, 16), tireMat); tire.rotation.z = Math.PI / 2; tire.position.set(wx, wy, wz);
+    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.25, 12), rimMat); rim.rotation.z = Math.PI / 2; rim.position.set(wx, wy, wz);
+    car.add(tire, rim);
+  });
+
+  const headL = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.16, 0.06), new THREE.MeshBasicMaterial({ color: 0xe0f2fe })); headL.position.set(-0.62, 0.64, 2.18);
+  const headR = headL.clone(); headR.position.x = 0.62;
+  const tailL = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.16, 0.06), new THREE.MeshBasicMaterial({ color: 0xdc2626 })); tailL.position.set(-0.62, 0.68, -2.18);
+  const tailR = tailL.clone(); tailR.position.x = 0.62;
+
+  car.add(chassis, cabin, roofPanel, headL, headR, tailL, tailR);
+  exteriorGroup.add(car);
+  const isTurned = Math.abs(Math.sin(rotY)) > 0.5;
+  addCollider(x, z, isTurned ? 4.35 : 1.9, isTurned ? 1.9 : 4.35, null);
+}
+
+buildDetailedCar(4.5, 2.5, Math.PI / 2, 0x64748b);
+buildDetailedCar(4.5, -2.2, Math.PI / 2, 0x111827);
+buildDetailedCar(-1.8, 42, 0, 0x334155);
+
+// Las sosnowy za osiedlem
 const barkMat = new THREE.MeshStandardMaterial({ color: 0x291709, roughness: 0.95 });
 const pineDarkMat = new THREE.MeshStandardMaterial({ color: 0x0b1f14, roughness: 0.9 });
 for (let i = 0; i < 65; i++) {
   const tx = -38 + (i % 13) * 6.2 + Math.sin(i * 2.1) * 1.9;
   const tz = -17 - Math.floor(i / 13) * 7.2;
   const h = 5.5 + (i % 4) * 1.4;
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.24, h * 0.55, 7), barkMat);
-  trunk.position.set(tx, h * 0.27, tz);
-  exteriorGroup.add(trunk);
-
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.24, h * 0.55, 7), barkMat); trunk.position.set(tx, h * 0.27, tz);
+  exteriorGroup.add(trunk); addCollider(tx, tz, 0.45, 0.45, null);
   for (let layer = 0; layer < 3; layer++) {
     const cone = new THREE.Mesh(new THREE.ConeGeometry(1.6 - layer * 0.35, h * 0.38, 7), pineDarkMat);
-    cone.position.set(tx, h * (0.48 + layer * 0.22), tz);
-    exteriorGroup.add(cone);
+    cone.position.set(tx, h * (0.48 + layer * 0.22), tz); exteriorGroup.add(cone);
   }
 }
 
-// Tabliczka ul. Papierowa + żółty dom przy 6 Kwiatowej
-const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 }));
-signPole.position.set(-3.8, 1.3, 34);
-const streetSign = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.24, 0.04), new THREE.MeshStandardMaterial({ map: makeSignTex('ul. Papierowa') }));
-streetSign.position.set(-3.8, 2.45, 34);
-const yellowHouse = new THREE.Mesh(new THREE.BoxGeometry(9.5, 6.5, 8.5), new THREE.MeshStandardMaterial({ color: 0x8a723c, map: tex.plasterTex, roughness: 0.85 }));
-yellowHouse.position.set(-14, 3.25, 38);
+// Tabliczka ul. Papierowa + słupy + żółty dom przy 6 Kwiatowej
+const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 })); signPole.position.set(-3.8, 1.3, 34);
+const streetSign = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.24, 0.04), new THREE.MeshStandardMaterial({ map: makeSignTex('ul. Papierowa') })); streetSign.position.set(-3.8, 2.45, 34);
+const yellowHouse = new THREE.Mesh(new THREE.BoxGeometry(9.5, 6.5, 8.5), new THREE.MeshStandardMaterial({ color: 0x8a723c, map: tex.plasterTex, roughness: 0.85 })); yellowHouse.position.set(-14, 3.25, 38);
+addCollider(-14, 38, 9.5, 8.5, null);
 exteriorGroup.add(signPole, streetSign, yellowHouse);
 
-// Latarnie uliczne z miękką poświatą we mgle (Sprite)
 for (let z = 8; z <= 68; z += 18) {
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 6.5), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8 }));
-  pole.position.set(-3.8, 3.25, z);
-  const bulb = new THREE.PointLight(0x93c5fd, 1.8, 28);
-  bulb.position.set(-2.9, 6.1, z);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 6.5), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8 })); pole.position.set(-3.8, 3.25, z);
+  const bulb = new THREE.PointLight(0x93c5fd, 1.8, 28); bulb.position.set(-2.9, 6.1, z);
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex.glowTex, color: 0xbfdbfe, transparent: true, blending: THREE.AdditiveBlending }));
-  sprite.scale.set(4.5, 4.5, 1);
-  sprite.position.set(-2.9, 6.1, z);
-  exteriorGroup.add(pole, bulb, sprite);
-  worldState.streetLamps.push(bulb);
+  sprite.scale.set(4.5, 4.5, 1); sprite.position.set(-2.9, 6.1, z);
+  exteriorGroup.add(pole, bulb, sprite); addCollider(-3.8, z, 0.3, 0.3, null);
 }
 
-// Pas usługowy przy Alei Krakowskiej + Maszt radiowy
 function buildCommercialBuilding(x, z, w, h, d, colorHex, signText, interiorKey) {
   const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshStandardMaterial({ color: colorHex, map: tex.plasterTex, roughness: 0.75 }));
-  b.position.set(x, h / 2, z);
-  const banner = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.75, 1.1), new THREE.MeshBasicMaterial({ map: makeSignTex(signText, '#090d16', '#facc15') }));
-  banner.position.set(x, h - 0.8, z + d / 2 + 0.05);
-  exteriorGroup.add(b, banner);
-  worldState.interactables.push({ id: `enter_${interiorKey}`, pos: new THREE.Vector3(x, 1.2, z + d / 2 + 1.4), label: `Wejdź do środka: ${signText} [E]`, interior: null, type: 'ENTER_INTERIOR', targetInterior: interiorKey });
+  b.position.set(x, h / 2, z); addCollider(x, z, w, d, null);
+  const frontGlass = new THREE.Mesh(new THREE.BoxGeometry(w * 0.65, h * 0.55, 0.15), new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.9, roughness: 0.1 }));
+  frontGlass.position.set(x, h * 0.35, z + d / 2 + 0.02);
+  const banner = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.78, 1.1), new THREE.MeshBasicMaterial({ map: makeSignTex(signText, '#090d16', '#facc15') }));
+  banner.position.set(x, h - 0.75, z + d / 2 + 0.06);
+  exteriorGroup.add(b, frontGlass, banner);
+  worldState.interactables.push({ id: `enter_${interiorKey}`, pos: new THREE.Vector3(x, 1.2, z + d / 2 + 1.5), label: `Wejdź do środka: ${signText} [E]`, interior: null, type: 'ENTER_INTERIOR', targetInterior: interiorKey });
 }
 
 buildCommercialBuilding(-18, 60, 14, 4.6, 10, 0x94a3b8, 'CARREFOUR EXPRESS', 'carrefour');
 buildCommercialBuilding(16, 60, 15, 5.2, 11, 0x7f1d1d, "LION'S GARAGE / OIL GARAŻ", 'garage');
 
-const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.95, 68, 6), new THREE.MeshStandardMaterial({ color: 0x475569, wireframe: true }));
-tower.position.set(14, 34, 110);
+const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.95, 68, 6), new THREE.MeshStandardMaterial({ color: 0x475569, wireframe: true })); tower.position.set(14, 34, 110);
 const towerBeacon = new THREE.PointLight(0xef4444, 4.0, 90); towerBeacon.position.set(14, 67, 110);
 const towerSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex.glowTex, color: 0xef4444, transparent: true, blending: THREE.AdditiveBlending }));
 towerSprite.scale.set(8, 8, 1); towerSprite.position.set(14, 67, 110);
 const bunkerHatch = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.4, 3.2), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
-bunkerHatch.position.set(14, 0.7, 104);
+bunkerHatch.position.set(14, 0.7, 104); addCollider(14, 104, 3.2, 3.2, null);
 exteriorGroup.add(tower, towerBeacon, towerSprite, bunkerHatch);
 worldState.interactables.push({ id: 'enter_bunker', pos: new THREE.Vector3(14, 1.2, 101.8), label: 'Zejdź do podziemnej stacji pod masztem [E]', interior: null, type: 'ENTER_INTERIOR', targetInterior: 'bunker' });
 
-// 4 Otwarte wnętrza
-function buildInteriorRoom(w, d, wallCol, floorCol, exitLabel, exitOutsidePos) {
+// 5. 4 WNĘTRZA Z MEBLAMI I KOLIZJAMI
+function buildInteriorRoom(key, w, d, wallCol, floorCol, exitLabel, exitOutsidePos) {
   const grp = new THREE.Group(); grp.visible = false; scene.add(grp);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: floorCol, map: tex.woodTex, roughness: 0.5 })); floor.rotation.x = -Math.PI / 2;
   const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: 0x090d16 })); ceiling.rotation.x = Math.PI / 2; ceiling.position.y = 3.3;
@@ -710,18 +658,37 @@ function buildInteriorRoom(w, d, wallCol, floorCol, exitLabel, exitOutsidePos) {
   const wS = new THREE.Mesh(new THREE.BoxGeometry(w, 3.3, 0.3), wMat); wS.position.set(0, 1.65, d / 2);
   const wW = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wW.position.set(-w / 2, 1.65, 0);
   const wE = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wE.position.set(w / 2, 1.65, 0);
-  const table = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.8, 1.1), new THREE.MeshStandardMaterial({ map: tex.woodTex })); table.position.set(0, 0.4, -d / 2 + 1.8);
-  const roomLight = new THREE.PointLight(0xfde68a, 1.1, 16); roomLight.position.set(0, 2.8, 0);
+
+  addCollider(0, -d / 2, w, 0.4, key); addCollider(0, d / 2, w, 0.4, key);
+  addCollider(-w / 2, 0, 0.4, d, key); addCollider(w / 2, 0, 0.4, d, key);
+
+  const table = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.82, 1.1), new THREE.MeshStandardMaterial({ map: tex.woodTex }));
+  table.position.set(0, 0.41, -d / 2 + 1.8); addCollider(0, -d / 2 + 1.8, 2.4, 1.1, key);
+  const roomLight = new THREE.PointLight(0xfde68a, 1.2, 18); roomLight.position.set(0, 2.8, 0);
   grp.add(floor, ceiling, wN, wS, wW, wE, table, roomLight);
   return { group: grp, exitLabel, exitOutsidePos, depth: d };
 }
 
 const interiors = {
-  segment4: buildInteriorRoom(11, 13, 0xcbd5e1, 0x3f2305, 'Wyjdź na dziedziniec osiedla [E]', new THREE.Vector3(5.2, 1.72, 4.5)),
-  carrefour: buildInteriorRoom(14, 12, 0x94a3b8, 0x1e293b, 'Wyjdź przed Carrefour Express [E]', new THREE.Vector3(-18, 1.72, 67)),
-  garage: buildInteriorRoom(15, 14, 0x334155, 0x0f172a, "Wyjdź z warsztatu Lion's Garage [E]", new THREE.Vector3(16, 1.72, 68)),
-  bunker: buildInteriorRoom(12, 18, 0x1c1917, 0x090d16, 'Wyjdź na powierzchnię pod masztem [E]', new THREE.Vector3(14, 1.72, 100))
+  segment4: buildInteriorRoom('segment4', 11, 13, 0xcbd5e1, 0x3f2305, 'Wyjdź na dziedziniec osiedla [E]', new THREE.Vector3(5.2, 1.72, 4.5)),
+  carrefour: buildInteriorRoom('carrefour', 14, 12, 0x94a3b8, 0x1e293b, 'Wyjdź przed Carrefour Express [E]', new THREE.Vector3(-18, 1.72, 67)),
+  garage: buildInteriorRoom('garage', 15, 14, 0x334155, 0x0f172a, "Wyjdź z warsztatu Lion's Garage [E]", new THREE.Vector3(16, 1.72, 68)),
+  bunker: buildInteriorRoom('bunker', 12, 18, 0x1c1917, 0x090d16, 'Wyjdź na powierzchnię pod masztem [E]', new THREE.Vector3(14, 1.72, 100))
 };
+
+const safeMesh = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.15, 0.75), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.3 }));
+safeMesh.position.set(4.2, 0.58, -5.2); addCollider(4.2, -5.2, 0.85, 0.75, 'segment4');
+interiors.segment4.group.add(safeMesh);
+
+for (let sx = -4.5; sx <= 4.5; sx += 4.5) {
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(1.1, 2.1, 5.5), new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6 }));
+  shelf.position.set(sx, 1.05, 0); interiors.carrefour.group.add(shelf); addCollider(sx, 0, 1.1, 5.5, 'carrefour');
+}
+
+for (let bx = -4.0; bx <= 4.0; bx += 8.0) {
+  const rack = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.4, 8.0), new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8 }));
+  rack.position.set(bx, 1.2, -1); interiors.bunker.group.add(rack); addCollider(bx, -1, 1.2, 8.0, 'bunker');
+}
 
 Object.entries(interiors).forEach(([key, room]) => {
   worldState.interactables.push({ id: `exit_${key}`, pos: new THREE.Vector3(0, 1.2, room.depth / 2 - 0.8), label: room.exitLabel, interior: key, type: 'EXIT_INTERIOR', exitOutsidePos: room.exitOutsidePos });
@@ -735,36 +702,79 @@ const uvClues = [];
   ctx.fillText('KOD SEJFU: 2318', 256, 70);
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.65), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, opacity: 0.0 }));
   mesh.position.set(5.95, 1.8, -5.8); mesh.rotation.y = -Math.PI / 2;
-  scene.add(mesh);
-  uvClues.push({ mesh, interior: null });
+  scene.add(mesh); uvClues.push({ mesh, interior: null });
 })();
+
+// 6. WYMODELOWANE 3D ZNAJDŹKI (Każdy przedmiot ma unikalny, rozpoznawalny kształt 3D)
+function createDetailedItemMesh(itemKey) {
+  const grp = new THREE.Group();
+  if (itemKey === 'glock17' || itemKey === 'shotgun') {
+    const m = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.9, roughness: 0.2 });
+    const len = itemKey === 'shotgun' ? 0.72 : 0.32;
+    const barrel = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.065, len), m); barrel.position.y = 0.08;
+    const grip = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.13, 0.065), m); grip.position.set(0, 0.02, -len * 0.35); grip.rotation.x = 0.25;
+    grp.add(barrel, grip);
+  } else if (itemKey === 'bandage') {
+    const caseMesh = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.14, 0.24), new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 }));
+    const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 0.04), new THREE.MeshBasicMaterial({ color: 0xdc2626 })); crossH.position.y = 0.075;
+    const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.02, 0.14), new THREE.MeshBasicMaterial({ color: 0xdc2626 })); crossV.position.y = 0.075;
+    grp.add(caseMesh, crossH, crossV);
+  } else if (itemKey === 'flare') {
+    const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.28, 12), new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.4 }));
+    cyl.rotation.z = Math.PI / 2; cyl.position.y = 0.04;
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.05, 12), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
+    cap.rotation.z = Math.PI / 2; cap.position.set(0.13, 0.04, 0);
+    grp.add(cyl, cap);
+  } else if (itemKey === 'battery') {
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.16, 14), new THREE.MeshStandardMaterial({ color: 0x090d16, metalness: 0.7 })); body.position.y = 0.08;
+    const top = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.04, 14), new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.85 })); top.position.y = 0.16;
+    grp.add(body, top);
+  } else if (itemKey === 'tape_1') {
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.04, 0.14), new THREE.MeshStandardMaterial({ color: 0x1e293b })); body.position.y = 0.02;
+    const r1 = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.045, 12), new THREE.MeshBasicMaterial({ color: 0xf8fafc })); r1.position.set(-0.05, 0.02, 0);
+    const r2 = r1.clone(); r2.position.x = 0.05;
+    grp.add(body, r1, r2);
+  } else if (itemKey === 'keycard_bunker') {
+    const card = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.01, 0.26), new THREE.MeshStandardMaterial({ color: 0xe0f2fe })); card.position.y = 0.01;
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.012, 0.26), new THREE.MeshBasicMaterial({ color: 0x0284c7 })); stripe.position.set(-0.04, 0.01, 0);
+    grp.add(card, stripe);
+  } else if (itemKey === 'fuse') {
+    const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.18, 12), new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.6 }));
+    glass.rotation.z = Math.PI / 2; glass.position.y = 0.03;
+    grp.add(glass);
+  } else {
+    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0x14532d, metalness: 0.7 })); visor.position.y = 0.06;
+    grp.add(visor);
+  }
+  const glow = new THREE.PointLight(0xfacc15, 0.75, 2.5); glow.position.y = 0.25;
+  grp.add(glow);
+  return grp;
+}
 
 function spawnWorldDrop(itemKey, pos, interiorKey = null, qty = 1, ammo = 0) {
   const def = ITEM_CATALOG[itemKey]; if (!def) return;
-  const group = new THREE.Group(); group.position.copy(pos);
-  const box = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.18, 0.28), new THREE.MeshStandardMaterial({ color: def.type === 'weapon' ? 0xef4444 : 0xd97706, metalness: 0.6, roughness: 0.3 }));
-  const glow = new THREE.PointLight(0xfacc15, 0.9, 2.8); glow.position.y = 0.28;
-  group.add(box, glow);
-  if (interiorKey && interiors[interiorKey]) interiors[interiorKey].group.add(group);
-  else scene.add(group);
-  itemsState.worldDrops.push({ id: 'd_' + Math.random().toString(36).slice(2, 9), itemKey, qty, ammo: ammo || def.maxAmmo || 0, pos: pos.clone(), interior: interiorKey, mesh: group });
+  const mesh = createDetailedItemMesh(itemKey);
+  mesh.position.copy(pos);
+  if (interiorKey && interiors[interiorKey]) interiors[interiorKey].group.add(mesh);
+  else scene.add(mesh);
+  itemsState.worldDrops.push({ id: 'd_' + Math.random().toString(36).slice(2, 9), itemKey, qty, ammo: ammo || def.maxAmmo || 0, pos: pos.clone(), interior: interiorKey, mesh });
 }
 
-spawnWorldDrop('battery', new THREE.Vector3(4.6, 0.98, 2.5), null, 2);
-spawnWorldDrop('bandage', new THREE.Vector3(-4.2, 0.15, 6.0), null, 1);
-spawnWorldDrop('flare', new THREE.Vector3(5.3, 1.42, 9.5), null, 2);
-spawnWorldDrop('tape_1', new THREE.Vector3(0, 0.88, -4.7), 'segment4', 1);
-spawnWorldDrop('nvg', new THREE.Vector3(-4.5, 0.88, -3.5), 'carrefour', 1);
-spawnWorldDrop('shotgun', new THREE.Vector3(0, 0.88, -5.2), 'garage', 1, 6);
-spawnWorldDrop('keycard_bunker', new THREE.Vector3(4.8, 0.88, -4.0), 'garage', 1);
-spawnWorldDrop('fuse', new THREE.Vector3(-2.0, 0.15, 2.0), 'garage', 1);
+spawnWorldDrop('battery', new THREE.Vector3(4.5, 0.85, 2.5), null, 2);
+spawnWorldDrop('bandage', new THREE.Vector3(-4.2, 0.02, 6.0), null, 1);
+spawnWorldDrop('flare', new THREE.Vector3(5.3, 1.38, 9.5), null, 2);
+spawnWorldDrop('tape_1', new THREE.Vector3(0, 0.83, -4.7), 'segment4', 1);
+spawnWorldDrop('nvg', new THREE.Vector3(-4.5, 0.83, -3.5), 'carrefour', 1);
+spawnWorldDrop('shotgun', new THREE.Vector3(0, 0.83, -5.2), 'garage', 1, 6);
+spawnWorldDrop('keycard_bunker', new THREE.Vector3(4.8, 0.83, -4.0), 'garage', 1);
+spawnWorldDrop('fuse', new THREE.Vector3(-2.0, 0.02, 2.0), 'garage', 1);
 
 worldState.interactables.push({ id: 'safe_segment_4', pos: new THREE.Vector3(4.2, 1.2, -5.2), label: 'Otwórz sejf w kotłowni Segmentu nr 4 [E]', interior: 'segment4', type: 'SAFE_PUZZLE' });
 worldState.interactables.push({ id: 'bunker_terminal', pos: new THREE.Vector3(0, 1.2, -7.2), label: 'Uruchom główny terminal pod masztem [E]', interior: 'bunker', type: 'FINAL_TERMINAL' });
 
-statusBar.innerText = 'Silnik 3D PBR gotowy! Wybierz klasę i kliknij WEJDŹ NA OSIEDLE.';
+statusBar.innerText = 'Gotowe! Wybierz specjalizację i wejdź na osiedle przy ul. Papierowej.';
 
-// 4. LOGIKA ROZGRYWKI I STEROWANIE
+// 7. LOGIKA ROZGRYWKI I STEROWANIE
 let gameStarted = false;
 function startGame() {
   player.nick = document.getElementById('player-nick').value.trim() || 'Agent_Łazy';
@@ -977,7 +987,7 @@ document.addEventListener('keydown', e => {
     const idx = player.activeSlot - 1;
     const item = player.inventory[idx];
     if (item) {
-      spawnWorldDrop(item.key, new THREE.Vector3(camera.position.x, 0.15, camera.position.z), worldState.currentInterior, item.qty, item.ammo);
+      spawnWorldDrop(item.key, new THREE.Vector3(camera.position.x, 0.05, camera.position.z), worldState.currentInterior, item.qty, item.ammo);
       player.inventory[idx] = null; updateInventoryUI();
     }
   }
@@ -994,7 +1004,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => keys[e.code] = false);
 
-// 5. PĘTLA RENDEROWANIA (Zmierzch -> Gęsta noc w 20 min + kołysanie kamery przy chodzeniu)
+// 8. PĘTLA RENDEROWANIA Z KOLIZJAMI ŚLIZGOWYMI
 const miniCtx = document.getElementById('minimap').getContext('2d');
 const duskSky = new THREE.Color(0x0d131c);
 const nightSky = new THREE.Color(0x020408);
@@ -1016,7 +1026,7 @@ function animate() {
   document.getElementById('world-clock').innerText = `${String(Math.floor(totalMins / 60) % 24).padStart(2, '0')}:${String(totalMins % 60).padStart(2, '0')} (${t < 0.45 ? 'Zmierzch' : 'Mglista noc'})`;
 
   uvClues.forEach(u => u.mesh.material.opacity = (itemsState.uvMode && u.interior === worldState.currentInterior) ? 0.95 : 0.0);
-  itemsState.worldDrops.forEach(d => { d.mesh.visible = (d.interior === worldState.currentInterior); d.mesh.rotation.y += dt * 1.5; });
+  itemsState.worldDrops.forEach(d => { d.mesh.visible = (d.interior === worldState.currentInterior); d.mesh.rotation.y += dt * 1.4; });
 
   if (gameStarted) {
     const isSprinting = keys['ShiftLeft'] && player.stamina > 5;
@@ -1024,18 +1034,26 @@ function animate() {
     const forward = new THREE.Vector3(-Math.sin(player.yaw), 0, -Math.cos(player.yaw));
     const right = new THREE.Vector3(Math.cos(player.yaw), 0, -Math.sin(player.yaw));
 
-    let moving = false;
-    if (keys['KeyW']) { camera.position.addScaledVector(forward, speed); moving = true; }
-    if (keys['KeyS']) { camera.position.addScaledVector(forward, -speed); moving = true; }
-    if (keys['KeyA']) { camera.position.addScaledVector(right, -speed); moving = true; }
-    if (keys['KeyD']) { camera.position.addScaledVector(right, speed); moving = true; }
+    let dx = 0, dz = 0;
+    if (keys['KeyW']) { dx += forward.x * speed; dz += forward.z * speed; }
+    if (keys['KeyS']) { dx -= forward.x * speed; dz -= forward.z * speed; }
+    if (keys['KeyA']) { dx -= right.x * speed; dz -= right.z * speed; }
+    if (keys['KeyD']) { dx += right.x * speed; dz += right.z * speed; }
 
-    // Realistyczne kołysanie kamery i dłoni podczas marszu (head-bob)
+    // Sprawdzanie kolizji niezależnie dla osi X i Z (gładkie ślizganie wzdłuż ścian i aut)
+    if (dx !== 0 && canMoveTo(camera.position.x + dx, camera.position.z, worldState.currentInterior)) {
+      camera.position.x += dx;
+    }
+    if (dz !== 0 && canMoveTo(camera.position.x, camera.position.z + dz, worldState.currentInterior)) {
+      camera.position.z += dz;
+    }
+
+    const moving = (dx !== 0 || dz !== 0);
     if (moving) {
       const bobFreq = isSprinting ? 13 : 8.5;
-      camera.position.y = 1.72 + Math.sin(clock.elapsedTime * bobFreq) * 0.035;
-      handsGroup.position.y = Math.cos(clock.elapsedTime * bobFreq) * 0.008;
-      if (isSprinting && player.adrenalineTimer <= 0) player.stamina = Math.max(0, player.stamina - 18 * dt);
+      camera.position.y = 1.72 + Math.sin(clock.elapsedTime * bobFreq) * 0.032;
+      handsGroup.position.y = Math.cos(clock.elapsedTime * bobFreq) * 0.007;
+      if (isSprinting) player.stamina = Math.max(0, player.stamina - 18 * dt);
     } else {
       camera.position.y += (1.72 - camera.position.y) * 0.15;
       player.stamina = Math.min(100, player.stamina + 12 * dt);
