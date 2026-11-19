@@ -1,0 +1,1066 @@
+!DOCTYPE html
+html lang=pl
+head
+  meta charset=UTF-8 
+  titleMartwa Częstotliwość – Łazy (ul. Papierowa)title
+  style
+     { box-sizing border-box; margin 0; padding 0; font-family 'Segoe UI', system-ui, sans-serif; }
+    body { overflow hidden; background #040609; color #e2e8f0; user-select none; }
+    #hud { position fixed; inset 0; pointer-events none; z-index 10; }
+
+    #mission-box {
+      position absolute; top 18px; left 18px; width 380px;
+      background rgba(8, 12, 18, 0.85); border-left 3px solid #eab308;
+      padding 14px 18px; backdrop-filter blur(8px); border-radius 0 6px 6px 0;
+    }
+    #mission-header { display flex; justify-content space-between; align-items center; }
+    #mission-header h1 { font-size 13px; letter-spacing 1.3px; color #facc15; text-transform uppercase; }
+    #world-clock { font-family monospace; font-size 13px; color #fb923c; font-weight bold; }
+    #mission-act { font-size 11px; color #38bdf8; margin-top 3px; font-weight 700; text-transform uppercase; }
+    #mission-desc { font-size 13px; margin-top 8px; color #cbd5e1; line-height 1.45; }
+
+    #team-box {
+      position absolute; top 18px; right 18px; pointer-events auto; width 280px;
+      background rgba(8, 12, 18, 0.85); border 1px solid #334155;
+      padding 12px 14px; border-radius 6px; backdrop-filter blur(8px);
+    }
+    #team-box h2 { font-size 11px; letter-spacing 1px; color #94a3b8; text-transform uppercase; margin-bottom 6px; }
+    .member-row {
+      display flex; justify-content space-between; align-items center;
+      background rgba(15, 23, 42, 0.7); padding 5px 8px; border-radius 4px; font-size 12px; margin-bottom 4px;
+    }
+    .member-role { font-size 10px; color #38bdf8; }
+    #p2p-controls input, #p2p-controls button {
+      width 100%; margin-top 5px; padding 6px 8px; background #0f172a;
+      border 1px solid #475569; color #fff; border-radius 4px; font-size 11px;
+    }
+    #p2p-controls button { background #eab308; color #090d16; font-weight bold; border none; cursor pointer; }
+
+    #bottom-left { position absolute; bottom 18px; left 18px; display flex; align-items flex-end; gap 14px; }
+    #minimap-wrap {
+      width 155px; height 155px; border-radius 50%; overflow hidden;
+      border 2px solid rgba(56, 189, 248, 0.5); background rgba(5, 9, 14, 0.92);
+    }
+    #vitals-box {
+      background rgba(8, 12, 18, 0.85); border 1px solid #1e293b;
+      padding 10px 14px; border-radius 6px; width 210px;
+    }
+    .vital-row { margin-bottom 7px; }
+    .vital-rowlast-child { margin-bottom 0; }
+    .vital-label { display flex; justify-content space-between; font-size 11px; color #94a3b8; margin-bottom 3px; }
+    .bar-bg { width 100%; height 6px; background #1e293b; border-radius 3px; overflow hidden; }
+    .bar-fill { height 100%; transition width 0.2s; }
+    #hp-bar { background #ef4444; width 100%; }
+    #stamina-bar { background #38bdf8; width 100%; }
+    #battery-bar { background #facc15; width 100%; }
+
+    #inventory-bar {
+      position absolute; bottom 18px; left 50%; transform translateX(-50%);
+      display flex; gap 8px; background rgba(8, 12, 18, 0.85);
+      padding 8px 12px; border-radius 8px; border 1px solid #334155;
+    }
+    .inv-slot {
+      width 84px; height 68px; background rgba(15, 23, 42, 0.8); border 1px solid #475569;
+      border-radius 5px; display flex; flex-direction column; justify-content space-between; padding 5px 6px;
+    }
+    .inv-slot.active { border-color #facc15; transform translateY(-4px); }
+    .inv-slot.class-slot { border-color #38bdf8; background rgba(14, 116, 144, 0.2); }
+    .slot-key { font-size 10px; color #94a3b8; font-weight bold; }
+    .slot-name { font-size 11px; color #f8fafc; font-weight 600; text-align center; }
+    .slot-qty { font-size 10px; color #facc15; text-align right; font-family monospace; }
+    #inv-hints {
+      position absolute; bottom 96px; left 50%; transform translateX(-50%);
+      font-size 11px; color #94a3b8; background rgba(0,0,0,0.65); padding 3px 10px; border-radius 4px;
+    }
+
+    #hand-hud {
+      position absolute; bottom 18px; right 18px; text-align right;
+      background rgba(8, 12, 18, 0.85); padding 10px 15px; border-radius 6px; border-right 3px solid #38bdf8;
+    }
+    #hand-item-title { font-size 14px; font-weight bold; color #f8fafc; }
+    #hand-item-sub { font-size 12px; color #94a3b8; font-family monospace; margin-top 2px; }
+
+    #crosshair {
+      position absolute; top 50%; left 50%; width 5px; height 5px;
+      background rgba(255,255,255,0.8); border-radius 50%; transform translate(-50%, -50%);
+    }
+    #interact-prompt {
+      position absolute; bottom 26%; left 50%; transform translateX(-50%);
+      background rgba(8, 12, 18, 0.92); border 1px solid #facc15; color #facc15;
+      padding 8px 18px; font-size 13px; font-weight bold; border-radius 4px; display none;
+    }
+
+    #start-screen {
+      position fixed; inset 0; background radial-gradient(circle at center, #0f172a 0%, #030508 100%);
+      z-index 30; display flex; flex-direction column; align-items center; justify-content center; padding 24px;
+    }
+    .class-grid { display grid; grid-template-columns repeat(4, 1fr); gap 14px; max-width 960px; margin-top 22px; }
+    .class-card {
+      background rgba(15, 23, 42, 0.85); border 1px solid #334155; border-radius 8px;
+      padding 16px; cursor pointer; text-align left; transition 0.2s;
+    }
+    .class-cardhover, .class-card.selected { border-color #facc15; background rgba(30, 41, 59, 0.95); transform translateY(-3px); }
+    .class-card h3 { color #facc15; font-size 15px; margin-bottom 6px; }
+    .class-card .gadget { color #38bdf8; font-size 12px; font-weight bold; margin-bottom 8px; }
+    .class-card p { color #cbd5e1; font-size 12px; line-height 1.4; }
+    .btn-start {
+      margin-top 24px; padding 14px 36px; font-size 15px; font-weight bold;
+      background #eab308; color #090d16; border none; border-radius 5px; cursor pointer; letter-spacing 1px;
+    }
+    .btn-starthover { background #facc15; }
+
+    #evidence-modal {
+      position fixed; inset 0; background rgba(3, 5, 8, 0.9); z-index 40;
+      display none; align-items center; justify-content center; padding 20px;
+    }
+    #evidence-box {
+      background #0f172a; border 1px solid #eab308; max-width 500px; width 100%;
+      padding 22px; border-radius 8px; text-align left;
+    }
+    #evidence-title { color #facc15; font-size 17px; margin-bottom 10px; }
+    #evidence-body { color #e2e8f0; font-size 14px; line-height 1.55; white-space pre-line; }
+    #code-row { margin-top 14px; display none; gap 8px; }
+    #code-row input { padding 8px; font-size 18px; width 140px; text-align center; letter-spacing 4px; background #020617; border 1px solid #facc15; color #fff; }
+    #code-row button, #btn-close-evidence { padding 8px 16px; background #eab308; color #000; font-weight bold; border none; border-radius 4px; cursor pointer; margin-top 14px; }
+    #error-banner {
+      position fixed; bottom 0; left 0; right 0; background #991b1b; color #fff;
+      font-size 12px; padding 6px 12px; z-index 99; display none;
+    }
+  style
+
+  script type=importmap
+    {
+      imports {
+        three httpscdn.jsdelivr.netnpmthree@0.169.0buildthree.module.js,
+        threeaddons httpscdn.jsdelivr.netnpmthree@0.169.0examplesjsm
+      }
+    }
+  script
+  script src=httpscdn.jsdelivr.netnpmpeerjs@1.5.4distpeerjs.min.jsscript
+head
+body
+
+div id=error-bannerdiv
+
+div id=start-screen
+  h1 style=color#facc15; letter-spacing2px; font-size28px;MARTWA CZĘSTOTLIWOŚĆh1
+  p style=color#38bdf8; font-size13px; margin-top4px;Łazy • Osiedle ul. Papierowa • ul. Kwiatowa • Aleja Krakowskap
+  p style=color#94a3b8; font-size13px; max-width660px; text-aligncenter; margin-top10px;
+    Wybierz swoją specjalizację. Każdy z Was otrzymuje b1 unikalne urządzenie (Slot 0)b niezbędne do przejścia śledztwa. Pozostałe przedmioty (broń, flary, klucze, noktowizor, leki) znajdziecie na mapie i podzielicie między siebie.
+  p
+
+  div class=class-grid id=class-grid
+    div class=class-card selected data-class=detective
+      h31. Śledczyh3
+      div class=gadgetGadżet Dekoder Policyjnydiv
+      pOdczytuje zaszyfrowane rejestry i raporty. Jako jedyny potrafi precyzyjnie strzelać ze znalezionej broni palnej bez odrzutu.p
+    div
+    div class=class-card data-class=tech
+      h32. Technik RFh3
+      div class=gadgetGadżet Skaner Częstotliwościdiv
+      pNamierza ukryte sygnały z masztu przy Al. Krakowskiej oraz naprawia uszkodzone skrzynki bezpieczników.p
+    div
+    div class=class-card data-class=breacher
+      h33. Włamywaczh3
+      div class=gadgetGadżet Zestaw Wytrychów i Łomdiv
+      pOtwiera zablokowane skrzynki pocztowe, kłódki, bramy oraz właz do kanału warsztatowego bez robienia hałasu.p
+    div
+    div class=class-card data-class=medic
+      h34. Badacz  Medykh3
+      div class=gadgetGadżet Latarka UV Dużej Mocydiv
+      pUjawnia niewidoczne ślady krwi i symbole na elewacjach szeregówek; podnosi powalonych znajomych i bada próbki.p
+    div
+  div
+
+  div style=margin-top16px; displayflex; gap10px; align-itemscenter;
+    input type=text id=player-nick value=Agent_Łazy placeholder=Twój nick... style=padding10px; background#0f172a; border1px solid #475569; color#fff; border-radius4px; 
+    input type=text id=chapter-code-input placeholder=Opcjonalny kod Aktu II style=padding10px; background#0f172a; border1px solid #475569; color#fff; border-radius4px; width190px; 
+  div
+
+  button class=btn-start id=btn-enter-gameWEJDŹ NA OSIEDLE (ZACHÓD SŁOŃCA)button
+div
+
+div id=evidence-modal
+  div id=evidence-box
+    h3 id=evidence-titleDowódh3
+    div id=evidence-bodyTreść...div
+    div id=code-row
+      input type=text id=safe-code-input maxlength=4 placeholder=0000 
+      button id=btn-verify-codeZATWIERDŹbutton
+    div
+    button id=btn-close-evidenceZAMKNIJbutton
+  div
+div
+
+div id=hud
+  div id=mission-box
+    div id=mission-header
+      h1Łazy • ul. Papierowah1
+      span id=world-clock1642 (Zachód słońca)span
+    div
+    div id=mission-actAKT I Cisza na osiedludiv
+    p id=mission-descZaczynacie na dziedzińcu białych szeregówek przy ul. Papierowej. Przeszukajcie okolicę pomp ciepła, skrzynek pocztowych i zaparkowanych aut w poszukiwaniu pierwszych tropów.p
+  div
+
+  div id=team-box
+    h2Drużyna (P2P + Krótkofalówki)h2
+    div id=team-membersdiv
+    div id=p2p-controls
+      div style=font-size11px; color#cbd5e1;Twoje ID pokoju b id=my-peer-id style=color#38bdf8;generowanie...bdiv
+      input type=text id=join-peer-input placeholder=Wklej ID pokoju znajomego... 
+      button id=btn-join-peerPołącz ze znajomymbutton
+    div
+  div
+
+  div id=bottom-left
+    div id=minimap-wrapcanvas id=minimap width=155 height=155canvasdiv
+    div id=vitals-box
+      div class=vital-row
+        div class=vital-labelspanZDROWIE (HP)spanspan id=hp-val100%spandiv
+        div class=bar-bgdiv class=bar-fill id=hp-bardivdiv
+      div
+      div class=vital-row
+        div class=vital-labelspanKONDYCJAspanspan id=stamina-val100%spandiv
+        div class=bar-bgdiv class=bar-fill id=stamina-bardivdiv
+      div
+      div class=vital-row
+        div class=vital-labelspanBATERIA LATARKIspanspan id=battery-val100%spandiv
+        div class=bar-bgdiv class=bar-fill id=battery-bardivdiv
+      div
+    div
+  div
+
+  div id=inv-hints[0-3] Wybierz slot  [F] Latarka  [E] UżyjPodnieś  [G] Upuść  [T] Podaj koledzediv
+  div id=inventory-bar
+    div class=inv-slot class-slot active data-slot=0
+      span class=slot-key[0] GADŻETspan
+      span class=slot-name id=slot-0-nameDekoderspan
+      span class=slot-qtyKLASAspan
+    div
+    div class=inv-slot data-slot=1
+      span class=slot-key[1]span
+      span class=slot-name id=slot-1-namePustyspan
+      span class=slot-qty id=slot-1-qtyspan
+    div
+    div class=inv-slot data-slot=2
+      span class=slot-key[2]span
+      span class=slot-name id=slot-2-namePustyspan
+      span class=slot-qty id=slot-2-qtyspan
+    div
+    div class=inv-slot data-slot=3
+      span class=slot-key[3]span
+      span class=slot-name id=slot-3-namePustyspan
+      span class=slot-qty id=slot-3-qtyspan
+    div
+  div
+
+  div id=hand-hud
+    div id=hand-item-titleDekoder Policyjnydiv
+    div id=hand-item-subLPM Skanuj dokumentydiv
+  div
+
+  div id=crosshairdiv
+  div id=interact-promptNaciśnij [E]div
+div
+
+script
+  window.addEventListener('error', e = {
+    const b = document.getElementById('error-banner');
+    b.style.display = 'block';
+    b.innerText = 'Błąd silnika ' + e.message;
+  });
+script
+
+script type=module
+import  as THREE from 'three';
+import { PointerLockControls } from 'threeaddonscontrolsPointerLockControls.js';
+
+const CLASS_CONFIG = {
+  detective { name 'Śledczy', gadgetName 'Dekoder Policyjny', gadgetHint 'LPM Odczytaj raporty  Precyzja broni +100%' },
+  tech { name 'Technik RF', gadgetName 'Skaner Częstotliwości', gadgetHint 'LPM Namierz sygnał z masztu przy Al. Krakowskiej' },
+  breacher { name 'Włamywacz', gadgetName 'Zestaw Wytrychów i Łom', gadgetHint 'LPM Sforsuj zamki i kłódki bez hałasu' },
+  medic { name 'Badacz  Medyk', gadgetName 'Latarka UV Dużej Mocy', gadgetHint 'LPM Przełącz światło UV (ujawnia krew i kody)' }
+};
+
+const ITEM_CATALOG = {
+  glock17 { name 'Glock-17 (Tłumik)', type 'weapon', maxAmmo 15, hint 'LPM Strzał' },
+  shotgun { name 'Strzelba Mossberg', type 'weapon', maxAmmo 6, hint 'LPM Strzał śrutem' },
+  flare { name 'Flara Czerwona', type 'consumable', hint 'LPM Rzuć flarę (oślepia anomalie na 40s)' },
+  firecracker { name 'Petarda Hukowa', type 'consumable', hint 'LPM Rzuć petardę (odciąga patrole)' },
+  nvg { name 'Gogle Noktowizyjne', type 'toggle', hint 'LPM Noktowizja' },
+  boltcutters { name 'Nożyce do metalu', type 'keyitem', hint 'Przecinają kłódkę przy lesie sosnowym' },
+  key_carrefour { name 'Klucz Chłodnia', type 'keyitem', hint 'Otwiera chłodnię w Carrefour Express' },
+  keycard_bunker { name 'Karta Masztu (Poz. 2)', type 'keyitem', hint 'Otwiera właz pod masztem przy Al. Krakowskiej' },
+  fuse { name 'Bezpiecznik 40A', type 'keyitem', hint 'Uruchamia generator w bunkrze' },
+  bandage { name 'Bandaż Taktyczny', type 'heal', hint 'LPM Leczy +45% HP' },
+  adrenaline { name 'Adrenalina', type 'buff', hint 'LPM Pełna kondycja przez 30s' },
+  battery { name 'Baterie Alkaliczne', type 'battery', hint 'LPM Ładuje latarkę do 100%' },
+  tape_1 { name 'Kaseta Dyktafonu #1', type 'evidence', hint 'LPM Odsłuchaj nagranie z Segmentu nr 4' },
+  polaroid_1 { name 'Zdjęcie Polaroid', type 'evidence', hint 'LPM Obejrzyj zdjęcie z warsztatu' }
+};
+
+ 1. SCENA I RENDERER
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(72, window.innerWidth  window.innerHeight, 0.1, 500);
+camera.position.set(0, 1.75, 6.5);
+
+const renderer = new THREE.WebGLRenderer({ antialias true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.18;
+document.body.appendChild(renderer.domElement);
+
+window.addEventListener('resize', () = {
+  camera.aspect = window.innerWidth  window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+const flashlight = new THREE.SpotLight(0xfffbeb, 24, 54, Math.PI  5.2, 0.42, 1.1);
+flashlight.castShadow = true;
+flashlight.shadow.mapSize.set(1024, 1024);
+camera.add(flashlight);
+camera.add(flashlight.target);
+flashlight.target.position.set(0, -0.18, -10);
+scene.add(camera);
+
+const handGroup = new THREE.Group();
+const gunMesh = new THREE.Mesh(
+  new THREE.BoxGeometry(0.045, 0.055, 0.28),
+  new THREE.MeshStandardMaterial({ color 0x1e293b, metalness 0.85, roughness 0.2 })
+);
+gunMesh.position.set(0.24, -0.22, -0.44);
+gunMesh.visible = false;
+const muzzleFlash = new THREE.PointLight(0xf59e0b, 0, 10);
+muzzleFlash.position.set(0.24, -0.2, -0.65);
+handGroup.add(gunMesh, muzzleFlash);
+camera.add(handGroup);
+
+ 2. ŚWIAT ŁAZ (Osiedle Papierowa, Kwiatowa, Aleja Krakowska, Las, Maszt + 4 Wnętrza)
+const worldState = {
+  isInside false,
+  currentInterior null,
+  elapsedMinutes 0,
+  streetLamps [],
+  interactables []
+};
+
+function makeCobbleTex() {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#181c22'; ctx.fillRect(0, 0, 256, 256);
+  for (let y = 0; y  256; y += 16) {
+    const off = (y  16) % 2 === 0  0  16;
+    for (let x = -16; x  256; x += 32) {
+      ctx.fillStyle = (x + y) % 64 === 0  '#333b45'  '#272e36';
+      ctx.fillRect(x + off + 1, y + 1, 30, 14);
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(110, 110);
+  return t;
+}
+
+function makeSignTex(text, bg = '#15803d', fg = '#ffffff') {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, 512, 128);
+  ctx.strokeStyle = fg; ctx.lineWidth = 6; ctx.strokeRect(6, 6, 500, 116);
+  ctx.fillStyle = fg; ctx.font = 'bold 42px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, 256, 66);
+  return new THREE.CanvasTexture(c);
+}
+
+const sunLight = new THREE.DirectionalLight(0xff7b47, 2.2);
+sunLight.position.set(-90, 28, 60);
+sunLight.castShadow = true;
+scene.add(sunLight);
+
+const hemiLight = new THREE.HemisphereLight(0xf97316, 0x1e293b, 0.85);
+scene.add(hemiLight);
+
+scene.background = new THREE.Color(0x2a1815);
+scene.fog = new THREE.FogExp2(0x261715, 0.011);
+
+const exteriorGroup = new THREE.Group();
+scene.add(exteriorGroup);
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(600, 600),
+  new THREE.MeshStandardMaterial({ map makeCobbleTex(), roughness 0.35, metalness 0.35 })
+);
+ground.rotation.x = -Math.PI  2;
+ground.receiveShadow = true;
+exteriorGroup.add(ground);
+
+const aleja = new THREE.Mesh(
+  new THREE.PlaneGeometry(500, 22),
+  new THREE.MeshStandardMaterial({ color 0x14181f, roughness 0.25, metalness 0.5 })
+);
+aleja.rotation.x = -Math.PI  2;
+aleja.position.set(0, 0.03, 75);
+exteriorGroup.add(aleja);
+
+function buildTerracedBlock(x, z, rotY, segments = 4, houseIndexOffset = 1) {
+  const group = new THREE.Group();
+  group.position.set(x, 0, z);
+  group.rotation.y = rotY;
+
+  const plaster = new THREE.MeshStandardMaterial({ color 0xebeef2, roughness 0.7 });
+  const wood = new THREE.MeshStandardMaterial({ color 0x9c5a25, roughness 0.65 });
+  const roofMat = new THREE.MeshStandardMaterial({ color 0x1e242b, roughness 0.55 });
+  const glass = new THREE.MeshStandardMaterial({ color 0x0f172a, roughness 0.1, metalness 0.9 });
+  const pumpMat = new THREE.MeshStandardMaterial({ color 0xcbd5e1, metalness 0.45, roughness 0.4 });
+
+  const segW = 5.4;
+  const totalW = segW  segments;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(totalW, 6.2, 9.6), plaster);
+  body.position.set(0, 3.1, 0);
+  body.castShadow = true;
+  body.receiveShadow = true;
+  group.add(body);
+
+  const roofShape = new THREE.Shape();
+  roofShape.moveTo(-4.95, 0); roofShape.lineTo(0, 2.35); roofShape.lineTo(4.95, 0); roofShape.closePath();
+  const roof = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(roofShape, { depth totalW + 0.3, bevelEnabled false }),
+    roofMat
+  );
+  roof.rotation.y = Math.PI  2;
+  roof.position.set(-totalW  2 - 0.15, 6.2, 0);
+  group.add(roof);
+
+  for (let i = 0; i  segments; i++) {
+    const sx = -totalW  2 + segW  (i + 0.5);
+    const woodStrip = new THREE.Mesh(new THREE.BoxGeometry(0.95, 5.3, 0.08), wood);
+    woodStrip.position.set(sx - 0.85, 3.1, 4.82);
+    const winTop = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.85, 0.1), glass);
+    winTop.position.set(sx - 1.45, 4.45, 4.82);
+    const winBot = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.65, 0.1), glass);
+    winBot.position.set(sx + 1.15, 1.5, 4.82);
+    const door = new THREE.Mesh(new THREE.BoxGeometry(1.05, 2.15, 0.12), wood);
+    door.position.set(sx - 0.2, 1.08, 4.82);
+    const canopy = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.14, 0.95), roofMat);
+    canopy.position.set(sx - 0.2, 2.38, 5.2);
+    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.1, 0.42), pumpMat);
+    pump.position.set(sx + 1.55, 0.55, 5.28);
+    group.add(woodStrip, winTop, winBot, door, canopy, pump);
+
+    if (houseIndexOffset + i === 4) {
+      const doorWorldPos = new THREE.Vector3(sx - 0.2, 1.2, 5.6);
+      doorWorldPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY);
+      doorWorldPos.add(new THREE.Vector3(x, 0, z));
+      worldState.interactables.push({
+        id 'door_segment_4',
+        pos doorWorldPos,
+        label 'Wejdź do wnętrza Segmentu nr 4 [E]',
+        interior null,
+        type 'ENTER_INTERIOR',
+        targetInterior 'segment4'
+      });
+    }
+  }
+  exteriorGroup.add(group);
+}
+
+buildTerracedBlock(10.5, -2, -Math.PI  2, 4, 1);
+buildTerracedBlock(-10.5, -2, Math.PI  2, 4, 5);
+
+const mailboxBank = new THREE.Mesh(
+  new THREE.BoxGeometry(0.35, 1.35, 2.2),
+  new THREE.MeshStandardMaterial({ color 0xd1d5db, metalness 0.6, roughness 0.3 })
+);
+mailboxBank.position.set(5.2, 0.68, 9.5);
+exteriorGroup.add(mailboxBank);
+
+function buildParkedCar(x, z, rotY, colorHex) {
+  const car = new THREE.Group();
+  car.position.set(x, 0, z);
+  car.rotation.y = rotY;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.75, 4.2), new THREE.MeshStandardMaterial({ color colorHex, metalness 0.75, roughness 0.25 }));
+  body.position.y = 0.65;
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.6, 2.2), new THREE.MeshStandardMaterial({ color 0x0f172a, metalness 0.9, roughness 0.1 }));
+  cabin.position.set(0, 1.25, -0.2);
+  car.add(body, cabin);
+  exteriorGroup.add(car);
+}
+buildParkedCar(4.5, 2.5, Math.PI  2, 0x94a3b8);
+buildParkedCar(4.5, -2.2, Math.PI  2, 0x1e293b);
+
+ Las sosnowy za osiedlem
+const trunkMat = new THREE.MeshStandardMaterial({ color 0x422006 });
+const pineMat = new THREE.MeshStandardMaterial({ color 0x143322, roughness 0.9 });
+for (let i = 0; i  65; i++) {
+  const tx = -36 + (i % 13)  6 + Math.sin(i)  1.8;
+  const tz = -18 - Math.floor(i  13)  7.5;
+  const h = 5.0 + (i % 4)  1.3;
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.22, h  0.45), trunkMat);
+  trunk.position.set(tx, h  0.22, tz);
+  const crown = new THREE.Mesh(new THREE.ConeGeometry(1.55, h  0.85, 7), pineMat);
+  crown.position.set(tx, h  0.68, tz);
+  exteriorGroup.add(trunk, crown);
+}
+
+ Tabliczka ul. Papierowa + żółty dom przy 6 Kwiatowej
+const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6), new THREE.MeshStandardMaterial({ color 0x94a3b8 }));
+signPole.position.set(-3.8, 1.3, 34);
+const streetSign = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.24, 0.04), new THREE.MeshStandardMaterial({ map makeSignTex('ul. Papierowa') }));
+streetSign.position.set(-3.8, 2.45, 34);
+const yellowHouse = new THREE.Mesh(new THREE.BoxGeometry(9.5, 6.5, 8.5), new THREE.MeshStandardMaterial({ color 0xd9b35f, roughness 0.8 }));
+yellowHouse.position.set(-14, 3.25, 38);
+exteriorGroup.add(signPole, streetSign, yellowHouse);
+
+function buildCommercialBuilding(x, z, w, h, d, colorHex, signText, interiorKey) {
+  const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshStandardMaterial({ color colorHex, roughness 0.65 }));
+  b.position.set(x, h  2, z);
+  const banner = new THREE.Mesh(new THREE.PlaneGeometry(w  0.75, 1.1), new THREE.MeshBasicMaterial({ map makeSignTex(signText, '#0f172a', '#facc15') }));
+  banner.position.set(x, h - 0.8, z + d  2 + 0.05);
+  exteriorGroup.add(b, banner);
+
+  worldState.interactables.push({
+    id `enter_${interiorKey}`,
+    pos new THREE.Vector3(x, 1.2, z + d  2 + 1.4),
+    label `Wejdź do środka ${signText} [E]`,
+    interior null,
+    type 'ENTER_INTERIOR',
+    targetInterior interiorKey
+  });
+}
+
+buildCommercialBuilding(-18, 60, 14, 4.6, 10, 0xcbd5e1, 'CARREFOUR EXPRESS', 'carrefour');
+buildCommercialBuilding(16, 60, 15, 5.2, 11, 0x991b1b, LION'S GARAGE  OIL GARAŻ, 'garage');
+
+const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.95, 68, 6), new THREE.MeshStandardMaterial({ color 0x64748b, wireframe true }));
+tower.position.set(14, 34, 110);
+const towerBeacon = new THREE.PointLight(0xef4444, 35, 90);
+towerBeacon.position.set(14, 67, 110);
+const bunkerHatch = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.4, 3.2), new THREE.MeshStandardMaterial({ color 0x334155, roughness 0.9 }));
+bunkerHatch.position.set(14, 0.7, 104);
+exteriorGroup.add(tower, towerBeacon, bunkerHatch);
+
+worldState.interactables.push({
+  id 'enter_bunker',
+  pos new THREE.Vector3(14, 1.2, 101.8),
+  label 'Zejdź do podziemnej stacji pod masztem [E]',
+  interior null,
+  type 'ENTER_INTERIOR',
+  targetInterior 'bunker'
+});
+
+for (let z = 12; z = 68; z += 18) {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 6.4), new THREE.MeshStandardMaterial({ color 0x334155 }));
+  pole.position.set(-3.6, 3.2, z);
+  const bulb = new THREE.PointLight(0x93c5fd, 0, 26);
+  bulb.position.set(-2.9, 6.0, z);
+  exteriorGroup.add(pole, bulb);
+  worldState.streetLamps.push(bulb);
+}
+
+ 4 otwarte wnętrza
+function buildInteriorRoom(w, d, wallCol, floorCol, exitLabel, exitOutsidePos) {
+  const grp = new THREE.Group();
+  grp.visible = false;
+  scene.add(grp);
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color floorCol, roughness 0.6 }));
+  floor.rotation.x = -Math.PI  2;
+  const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color 0x0f172a }));
+  ceiling.rotation.x = Math.PI  2; ceiling.position.y = 3.3;
+
+  const wMat = new THREE.MeshStandardMaterial({ color wallCol, roughness 0.85 });
+  const wN = new THREE.Mesh(new THREE.BoxGeometry(w, 3.3, 0.3), wMat); wN.position.set(0, 1.65, -d  2);
+  const wS = new THREE.Mesh(new THREE.BoxGeometry(w, 3.3, 0.3), wMat); wS.position.set(0, 1.65, d  2);
+  const wW = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wW.position.set(-w  2, 1.65, 0);
+  const wE = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wE.position.set(w  2, 1.65, 0);
+  const table = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.8, 1.1), new THREE.MeshStandardMaterial({ color 0x451a03 }));
+  table.position.set(0, 0.4, -d  2 + 1.8);
+  const roomLight = new THREE.PointLight(0xfef3c7, 7, 15);
+  roomLight.position.set(0, 2.8, 0);
+
+  grp.add(floor, ceiling, wN, wS, wW, wE, table, roomLight);
+  return { group grp, exitLabel, exitOutsidePos, depth d };
+}
+
+const interiors = {
+  segment4 buildInteriorRoom(11, 13, 0xe2e8f0, 0x451a03, 'Wyjdź na dziedziniec osiedla [E]', new THREE.Vector3(5.2, 1.75, 4.5)),
+  carrefour buildInteriorRoom(14, 12, 0xdbeafe, 0x1e293b, 'Wyjdź przed Carrefour Express [E]', new THREE.Vector3(-18, 1.75, 67)),
+  garage buildInteriorRoom(15, 14, 0x334155, 0x0f172a, Wyjdź z warsztatu Lion's Garage [E], new THREE.Vector3(16, 1.75, 68)),
+  bunker buildInteriorRoom(12, 18, 0x1c1917, 0x090d16, 'Wyjdź na powierzchnię pod masztem [E]', new THREE.Vector3(14, 1.75, 100))
+};
+
+Object.entries(interiors).forEach(([key, room]) = {
+  worldState.interactables.push({
+    id `exit_${key}`,
+    pos new THREE.Vector3(0, 1.2, room.depth  2 - 0.8),
+    label room.exitLabel,
+    interior key,
+    type 'EXIT_INTERIOR',
+    exitOutsidePos room.exitOutsidePos
+  });
+});
+
+ 3. SYSTEM PRZEDMIOTÓW, ZAGADEK I UV
+const itemsState = {
+  act 1,
+  hasPowerInBunker false,
+  uvMode false,
+  nvgMode false,
+  activeFlares [],
+  worldDrops []
+};
+
+const uvClues = [];
+function addUVWallClue(x, y, z, rotY, text, interiorKey = null) {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#a855f7'; ctx.font = 'bold 34px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(text, 256, 70);
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.65), new THREE.MeshBasicMaterial({ map new THREE.CanvasTexture(c), transparent true, opacity 0.0 }));
+  mesh.position.set(x, y, z); mesh.rotation.y = rotY;
+  if (interiorKey && interiors[interiorKey]) interiors[interiorKey].group.add(mesh);
+  else scene.add(mesh);
+  uvClues.push({ mesh, interior interiorKey });
+}
+
+addUVWallClue(5.65, 1.8, -5.8, -Math.PI  2, 'KOD SEJFU 2318', null);
+addUVWallClue(0, 1.9, -5.8, 0, 'SZUKAJ W KANALACH GARAZU', 'carrefour');
+
+function spawnWorldDrop(itemKey, pos, interiorKey = null, qty = 1, ammo = 0) {
+  const def = ITEM_CATALOG[itemKey];
+  if (!def) return;
+  const group = new THREE.Group();
+  group.position.copy(pos);
+  const box = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, 0.22, 0.32),
+    new THREE.MeshStandardMaterial({ color def.type === 'weapon'  0xef4444  (def.type === 'evidence'  0x38bdf8  0xeab308), roughness 0.4 })
+  );
+  const glow = new THREE.PointLight(0xfacc15, 1.5, 3.5);
+  glow.position.y = 0.35;
+  group.add(box, glow);
+  if (interiorKey && interiors[interiorKey]) interiors[interiorKey].group.add(group);
+  else scene.add(group);
+
+  itemsState.worldDrops.push({ id `drop_${Math.random().toString(36).slice(2, 9)}`, itemKey, qty, ammo ammo  def.maxAmmo  0, pos pos.clone(), interior interiorKey, mesh group });
+}
+
+spawnWorldDrop('battery', new THREE.Vector3(4.5, 0.85, 2.5), null, 2);
+spawnWorldDrop('bandage', new THREE.Vector3(-4.2, 0.2, 6.0), null, 1);
+spawnWorldDrop('flare', new THREE.Vector3(5.2, 1.4, 9.5), null, 2);
+spawnWorldDrop('tape_1', new THREE.Vector3(0, 0.9, -4.7), 'segment4', 1);
+spawnWorldDrop('boltcutters', new THREE.Vector3(-3.8, 0.2, -2.0), 'segment4', 1);
+spawnWorldDrop('nvg', new THREE.Vector3(-4.5, 0.9, -3.5), 'carrefour', 1);
+spawnWorldDrop('shotgun', new THREE.Vector3(0, 0.9, -5.2), 'garage', 1, 6);
+spawnWorldDrop('polaroid_1', new THREE.Vector3(-4.5, 0.9, -1.5), 'garage', 1);
+spawnWorldDrop('keycard_bunker', new THREE.Vector3(4.8, 0.9, -4.0), 'garage', 1);
+spawnWorldDrop('fuse', new THREE.Vector3(-2.0, 0.2, 2.0), 'garage', 1);
+spawnWorldDrop('fuse', new THREE.Vector3(-4.0, 0.2, -3.0), 'bunker', 1);
+
+worldState.interactables.push({ id 'safe_segment_4', pos new THREE.Vector3(4.2, 1.2, -5.2), label 'Otwórz sejf w kotłowni Segmentu nr 4 [E]', interior 'segment4', type 'SAFE_PUZZLE' });
+worldState.interactables.push({ id 'bunker_terminal', pos new THREE.Vector3(0, 1.2, -7.2), label 'Uruchom główny terminal pod masztem [E]', interior 'bunker', type 'FINAL_TERMINAL' });
+
+ 4. STAN GRACZA I STEROWANIE
+const player = { nick 'Agent_Łazy', playerClass 'detective', hp 100, stamina 100, battery 100, adrenalineTimer 0, activeSlot 0, inventory [null, null, null] };
+
+document.querySelectorAll('.class-card').forEach(card = {
+  card.addEventListener('click', () = {
+    document.querySelectorAll('.class-card').forEach(c = c.classList.remove('selected'));
+    card.classList.add('selected');
+    player.playerClass = card.dataset.class;
+  });
+});
+
+const controls = new PointerLockControls(camera, document.body);
+
+document.getElementById('btn-enter-game').addEventListener('click', () = {
+  player.nick = document.getElementById('player-nick').value.trim()  'Agent_Łazy';
+  const savedCode = document.getElementById('chapter-code-input').value.trim().toUpperCase();
+  if (savedCode === 'KRAKOWSKA77') {
+    worldState.elapsedMinutes = 20;
+    itemsState.act = 2;
+    player.inventory[0] = { key 'glock17', qty 1, ammo 12 };
+    document.getElementById('mission-act').innerText = 'AKT II Po drugiej stronie Krakowskiej';
+    document.getElementById('mission-desc').innerText = Wznowiono śledztwo w Akcie II! Przeszukajcie zaplecze Carrefour Express oraz kanały warsztatu Lion's Garage przy Alei Krakowskiej.;
+    enemies.forEach(e = { e.active = true; });
+  }
+  document.getElementById('start-screen').style.display = 'none';
+  updateInventoryUI();
+  updateTeamUI();
+  controls.lock();
+  initVoiceChat();
+});
+
+function updateInventoryUI() {
+  const cls = CLASS_CONFIG[player.playerClass];
+  document.getElementById('slot-0-name').innerText = cls.gadgetName;
+  for (let i = 1; i = 3; i++) {
+    const item = player.inventory[i - 1];
+    const nameEl = document.getElementById(`slot-${i}-name`);
+    const qtyEl = document.getElementById(`slot-${i}-qty`);
+    if (item) {
+      const def = ITEM_CATALOG[item.key];
+      nameEl.innerText = def.name;
+      qtyEl.innerText = def.type === 'weapon'  `${item.ammo} nab.`  (item.qty  1  `x${item.qty}`  '');
+    } else {
+      nameEl.innerText = 'Pusty';
+      qtyEl.innerText = '';
+    }
+  }
+  document.querySelectorAll('.inv-slot').forEach(el = el.classList.toggle('active', Number(el.dataset.slot) === player.activeSlot));
+  if (player.activeSlot === 0) {
+    document.getElementById('hand-item-title').innerText = cls.gadgetName;
+    document.getElementById('hand-item-sub').innerText = cls.gadgetHint;
+    gunMesh.visible = false;
+  } else {
+    const item = player.inventory[player.activeSlot - 1];
+    if (item) {
+      const def = ITEM_CATALOG[item.key];
+      document.getElementById('hand-item-title').innerText = def.name;
+      document.getElementById('hand-item-sub').innerText = def.type === 'weapon'  `Amunicja ${item.ammo}  ${def.hint}`  def.hint;
+      gunMesh.visible = (def.type === 'weapon');
+    } else {
+      document.getElementById('hand-item-title').innerText = 'Puste ręce';
+      document.getElementById('hand-item-sub').innerText = 'Podejdź do przedmiotu i naciśnij [E]';
+      gunMesh.visible = false;
+    }
+  }
+}
+
+document.addEventListener('mousedown', e = {
+  if (!controls.isLocked  e.button !== 0) return;
+  if (player.activeSlot === 0) {
+    if (player.playerClass === 'medic') {
+      itemsState.uvMode = !itemsState.uvMode;
+      flashlight.color.setHex(itemsState.uvMode  0xa855f7  0xfffbeb);
+      flashlight.visible = true;
+    } else if (player.playerClass === 'tech') {
+      const dist = Math.round(camera.position.distanceTo(new THREE.Vector3(14, 1.75, 110)));
+      showEvidenceModal('SKANER CZĘSTOTLIWOŚCI RF', `Sygnał 433.92 MHz wykryty!nOdległość od nadajnika przy Alei Krakowskiej ${dist} m.`);
+    } else if (player.playerClass === 'detective') {
+      showEvidenceModal('DEKODER POLICYJNY', 'Tropy prowadzą z ul. Papierowej przez Carrefour Express do warsztatów przy Alei Krakowskiej.');
+    } else if (player.playerClass === 'breacher') {
+      showEvidenceModal('ZESTAW WYTRYCHÓW I ŁOM', 'Podejdź do zamkniętych drzwi lub sejfu i naciśnij [E].');
+    }
+    return;
+  }
+
+  const slotIdx = player.activeSlot - 1;
+  const item = player.inventory[slotIdx];
+  if (!item) return;
+  const def = ITEM_CATALOG[item.key];
+
+  if (def.type === 'weapon' && item.ammo  0) {
+    item.ammo--;
+    muzzleFlash.intensity = 32;
+    gunMesh.position.z = -0.35;
+    setTimeout(() = { muzzleFlash.intensity = 0; gunMesh.position.z = -0.44; }, 75);
+    updateInventoryUI();
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
+    enemies.forEach(en = {
+      if (!en.active  en.interior !== worldState.currentInterior) return;
+      const toEn = en.mesh.position.clone().sub(camera.position);
+      if (toEn.length()  32 && toEn.normalize().dot(forward)  0.88) {
+        en.stunTimer = 10;
+        en.mesh.position.addScaledVector(forward, 14);
+      }
+    });
+  } else if (item.key === 'flare') {
+    const dir = new THREE.Vector3();
+    camera.getWorldDirection(dir);
+    const fMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.22), new THREE.MeshBasicMaterial({ color 0xef4444 }));
+    fMesh.position.copy(camera.position).addScaledVector(dir, 1.5); fMesh.position.y = 0.12;
+    const fLight = new THREE.PointLight(0xef4444, 22, 28); fLight.position.y = 0.3; fMesh.add(fLight);
+    if (worldState.currentInterior) interiors[worldState.currentInterior].group.add(fMesh);
+    else scene.add(fMesh);
+    itemsState.activeFlares.push({ mesh fMesh, pos fMesh.position.clone(), timer 40 });
+    consumeItem(slotIdx);
+  } else if (item.key === 'nvg') {
+    itemsState.nvgMode = !itemsState.nvgMode;
+    scene.fog.density = itemsState.nvgMode  0.006  0.025;
+  } else if (def.type === 'heal') {
+    player.hp = Math.min(100, player.hp + 45); consumeItem(slotIdx);
+  } else if (def.type === 'buff') {
+    player.stamina = 100; player.adrenalineTimer = 30; consumeItem(slotIdx);
+  } else if (def.type === 'battery') {
+    player.battery = 100; consumeItem(slotIdx);
+  } else if (item.key === 'tape_1') {
+    showEvidenceModal('NAGRANIE Z DYKTAFONU (SEGMENT NR 4)', '„...w chłodni Carrefoura przy Krakowskiej trzymają próbki! Kod do sejfu w kotłowni zostawiłem UV na ścianie przed wejściem...”');
+  } else if (item.key === 'polaroid_1') {
+    showEvidenceModal('ZDJĘCIE POLAROIDOWE Z WARSZTATU', 'Widać podziemny tunel bezpośrednio pod wysokim masztem radiowym za Aleją Krakowską.');
+  }
+});
+
+function consumeItem(slotIdx) {
+  const item = player.inventory[slotIdx];
+  if (!item) return;
+  item.qty--;
+  if (item.qty = 0) player.inventory[slotIdx] = null;
+  updateInventoryUI();
+}
+
+let hoveredTarget = null;
+function handleInteract() {
+  if (!hoveredTarget) return;
+  if (hoveredTarget.kind === 'DROP') {
+    const drop = hoveredTarget.data;
+    const freeIdx = player.inventory.findIndex(s = s === null);
+    if (freeIdx === -1) return;
+    player.inventory[freeIdx] = { key drop.itemKey, qty drop.qty, ammo drop.ammo };
+    drop.mesh.removeFromParent();
+    itemsState.worldDrops = itemsState.worldDrops.filter(d = d.id !== drop.id);
+    broadcastEvent({ type 'REMOVE_DROP', dropId drop.id });
+    updateInventoryUI();
+    return;
+  }
+  const obj = hoveredTarget.data;
+  if (obj.type === 'ENTER_INTERIOR') {
+    if (obj.targetInterior === 'bunker' && !player.inventory.some(s = s && s.key === 'keycard_bunker')) {
+      showEvidenceModal('ZAMKNIĘTY WŁAZ POD MASZTEM', 'Wymagana Karta Masztu (Poz. 2) z warsztatów przy Alei Krakowskiej!');
+      return;
+    }
+    worldState.isInside = true;
+    worldState.currentInterior = obj.targetInterior;
+    exteriorGroup.visible = false;
+    Object.values(interiors).forEach(r = r.group.visible = false);
+    interiors[obj.targetInterior].group.visible = true;
+    camera.position.set(0, 1.75, interiors[obj.targetInterior].depth  2 - 2.0);
+    if (obj.targetInterior === 'carrefour' && itemsState.act === 1) {
+      itemsState.act = 2;
+      worldState.elapsedMinutes = Math.max(worldState.elapsedMinutes, 20);
+      document.getElementById('mission-act').innerText = 'AKT II Po drugiej stronie Krakowskiej';
+      document.getElementById('mission-desc').innerText = 'ZAPADŁA MGLISTA NOC! Kod zapisu Aktu II KRAKOWSKA77';
+      enemies.forEach(e = e.active = true);
+    }
+  } else if (obj.type === 'EXIT_INTERIOR') {
+    const cur = interiors[worldState.currentInterior];
+    worldState.isInside = false;
+    worldState.currentInterior = null;
+    Object.values(interiors).forEach(r = r.group.visible = false);
+    exteriorGroup.visible = true;
+    if (cur) camera.position.copy(cur.exitOutsidePos);
+  } else if (obj.type === 'SAFE_PUZZLE') {
+    controls.unlock();
+    document.getElementById('evidence-title').innerText = 'SEJF W KOTŁOWNI (SEGMENT NR 4)';
+    document.getElementById('evidence-body').innerText = 'Wpisz 4-cyfrowy kod odkryty światłem UV na ścianie przed wejściem';
+    document.getElementById('code-row').style.display = 'flex';
+    document.getElementById('evidence-modal').style.display = 'flex';
+  } else if (obj.type === 'FINAL_TERMINAL') {
+    if (!player.inventory.some(s = s && s.key === 'fuse') && !itemsState.hasPowerInBunker) {
+      showEvidenceModal('BRAK ZASILANIA', 'Potrzebujesz bezpiecznika 40A z warsztatu lub bunkra.');
+    } else {
+      itemsState.hasPowerInBunker = true;
+      showEvidenceModal('FINAŁ ŚLEDZTWA – ARCHIWUM ODBLOKOWANE!', 'Nadajnik przy Alei Krakowskiej był nadzorowany przez rzekomo zaginionego sąsiada z Segmentu nr 4! Gratulacje!');
+    }
+  }
+}
+
+function showEvidenceModal(title, body) {
+  controls.unlock();
+  document.getElementById('evidence-title').innerText = title;
+  document.getElementById('evidence-body').innerText = body;
+  document.getElementById('code-row').style.display = 'none';
+  document.getElementById('evidence-modal').style.display = 'flex';
+}
+
+document.getElementById('btn-verify-code').addEventListener('click', () = {
+  if (document.getElementById('safe-code-input').value === '2318') {
+    document.getElementById('evidence-modal').style.display = 'none';
+    spawnWorldDrop('glock17', new THREE.Vector3(3.8, 0.85, -4.8), 'segment4', 1, 15);
+    showEvidenceModal('SEJF OTWARTY!', 'W środku leży pistolet Glock-17 z tłumikiem!');
+  } else {
+    alert('Błędny kod! Użyj latarki UV przy wejściu do Segmentu nr 4.');
+  }
+});
+
+document.getElementById('btn-close-evidence').addEventListener('click', () = {
+  document.getElementById('evidence-modal').style.display = 'none';
+  controls.lock();
+});
+
+const enemies = [
+  { mesh new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 1.35, 4, 8), new THREE.MeshStandardMaterial({ color 0x05070c, emissive 0x991b1b, emissiveIntensity 0.7 })), active false, interior null, stunTimer 0 }
+];
+enemies[0].mesh.position.set(-4, 1.05, -26);
+scene.add(enemies[0].mesh);
+
+ MULTIPLAYER P2P
+let peer = null;
+const connections = {};
+const remotePlayers = {};
+let localAudioStream = null;
+try {
+  if (typeof Peer !== 'undefined') {
+    peer = new Peer();
+    peer.on('open', id = document.getElementById('my-peer-id').innerText = id);
+    peer.on('connection', c = setupDataConn(c));
+    peer.on('call', call = {
+      call.answer(localAudioStream);
+      call.on('stream', s = { const a = new Audio(); a.srcObject = s; a.play(); });
+    });
+  }
+} catch (e) {}
+
+document.getElementById('btn-join-peer').addEventListener('click', () = {
+  const id = document.getElementById('join-peer-input').value.trim();
+  if (!id  !peer) return;
+  setupDataConn(peer.connect(id));
+  if (localAudioStream) peer.call(id, localAudioStream);
+});
+
+async function initVoiceChat() {
+  try { localAudioStream = await navigator.mediaDevices.getUserMedia({ audio true }); } catch (e) {}
+}
+
+function setupDataConn(conn) {
+  connections[conn.peer] = conn;
+  conn.on('data', msg = {
+    if (msg.type === 'STATE') {
+      if (!remotePlayers[conn.peer]) {
+        const av = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 1.05, 4, 8), new THREE.MeshStandardMaterial({ color 0x38bdf8 }));
+        scene.add(av);
+        remotePlayers[conn.peer] = { mesh av, nick msg.nick, role msg.role, interior msg.interior };
+        updateTeamUI();
+      }
+      const rp = remotePlayers[conn.peer];
+      rp.nick = msg.nick; rp.role = msg.role; rp.interior = msg.interior;
+      rp.mesh.visible = (msg.interior === worldState.currentInterior);
+      rp.mesh.position.set(msg.x, 0.9, msg.z);
+    } else if (msg.type === 'REMOVE_DROP') {
+      const d = itemsState.worldDrops.find(x = x.id === msg.dropId);
+      if (d) { d.mesh.removeFromParent(); itemsState.worldDrops = itemsState.worldDrops.filter(x = x.id !== msg.dropId); }
+    } else if (msg.type === 'RECEIVE_ITEM') {
+      const idx = player.inventory.findIndex(s = s === null);
+      if (idx !== -1) { player.inventory[idx] = msg.item; updateInventoryUI(); }
+    }
+  });
+}
+
+function broadcastEvent(p) { Object.values(connections).forEach(c = { if (c.open) c.send(p); }); }
+
+function updateTeamUI() {
+  const el = document.getElementById('team-members');
+  el.innerHTML = `div class=member-rowspanb${player.nick}b (Ty)spanspan class=member-role${CLASS_CONFIG[player.playerClass].name}spandiv`;
+  Object.values(remotePlayers).forEach(rp = {
+    el.innerHTML += `div class=member-rowspan${rp.nick}spanspan class=member-role${CLASS_CONFIG[rp.role].name  'Agent'}spandiv`;
+  });
+}
+
+const keys = {};
+document.addEventListener('keydown', e = {
+  keys[e.code] = true;
+  if (e.code === 'Digit0') { player.activeSlot = 0; updateInventoryUI(); }
+  if (e.code === 'Digit1') { player.activeSlot = 1; updateInventoryUI(); }
+  if (e.code === 'Digit2') { player.activeSlot = 2; updateInventoryUI(); }
+  if (e.code === 'Digit3') { player.activeSlot = 3; updateInventoryUI(); }
+  if (e.code === 'KeyF' && player.battery  0) flashlight.visible = !flashlight.visible;
+  if (e.code === 'KeyE') handleInteract();
+  if (e.code === 'KeyG' && player.activeSlot  0) {
+    const idx = player.activeSlot - 1;
+    const item = player.inventory[idx];
+    if (item) {
+      spawnWorldDrop(item.key, new THREE.Vector3(camera.position.x, 0.15, camera.position.z), worldState.currentInterior, item.qty, item.ammo);
+      player.inventory[idx] = null;
+      updateInventoryUI();
+    }
+  }
+  if (e.code === 'KeyT' && player.activeSlot  0) {
+    const idx = player.activeSlot - 1;
+    const item = player.inventory[idx];
+    if (!item) return;
+    const targetEntry = Object.entries(remotePlayers).find(([_, rp]) = rp.interior === worldState.currentInterior && camera.position.distanceTo(rp.mesh.position)  4);
+    if (targetEntry && connections[targetEntry[0]]) {
+      connections[targetEntry[0]].send({ type 'RECEIVE_ITEM', item });
+      player.inventory[idx] = null;
+      updateInventoryUI();
+    }
+  }
+});
+document.addEventListener('keyup', e = keys[e.code] = false);
+
+const miniCtx = document.getElementById('minimap').getContext('2d');
+const sunsetSky = new THREE.Color(0x3b1812);
+const nightSky = new THREE.Color(0x03060c);
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(0.1, clock.getDelta());
+
+  worldState.elapsedMinutes += dt  60;
+  const t = Math.min(1, worldState.elapsedMinutes  20);
+  scene.background.lerpColors(sunsetSky, nightSky, t);
+  scene.fog.color.lerpColors(sunsetSky, nightSky, t);
+  scene.fog.density = 0.010 + t  0.018;
+  sunLight.intensity = 2.2  (1 - t) + 0.15;
+  worldState.streetLamps.forEach(l = l.intensity = t  0.35  14  0);
+
+  const totalMins = 16  60 + 42 + Math.floor(worldState.elapsedMinutes);
+  document.getElementById('world-clock').innerText = `${String(Math.floor(totalMins  60) % 24).padStart(2, '0')}${String(totalMins % 60).padStart(2, '0')} (${t  0.35  'Zachód'  'Noc'})`;
+
+  uvClues.forEach(u = u.mesh.material.opacity = (itemsState.uvMode && u.interior === worldState.currentInterior)  0.95  0.0);
+  itemsState.worldDrops.forEach(d = { d.mesh.visible = (d.interior === worldState.currentInterior); d.mesh.rotation.y += dt  1.5; });
+
+  if (controls.isLocked) {
+    const isSprinting = keys['ShiftLeft'] && player.stamina  5;
+    const speed = (isSprinting  9.5  5.5)  dt;
+    if (keys['KeyW']) controls.moveForward(speed);
+    if (keys['KeyS']) controls.moveForward(-speed);
+    if (keys['KeyA']) controls.moveRight(-speed);
+    if (keys['KeyD']) controls.moveRight(speed);
+    if (isSprinting && (keys['KeyW']  keys['KeyS']  keys['KeyA']  keys['KeyD']) && player.adrenalineTimer = 0) {
+      player.stamina = Math.max(0, player.stamina - 18  dt);
+    } else {
+      player.stamina = Math.min(100, player.stamina + 12  dt);
+    }
+  }
+  if (player.adrenalineTimer  0) player.adrenalineTimer -= dt;
+  if (flashlight.visible  itemsState.nvgMode) player.battery = Math.max(0, player.battery - 0.35  dt);
+
+  document.getElementById('hp-bar').style.width = `${player.hp}%`;
+  document.getElementById('hp-val').innerText = `${Math.round(player.hp)}%`;
+  document.getElementById('stamina-bar').style.width = `${player.stamina}%`;
+  document.getElementById('stamina-val').innerText = `${Math.round(player.stamina)}%`;
+  document.getElementById('battery-bar').style.width = `${player.battery}%`;
+  document.getElementById('battery-val').innerText = `${Math.round(player.battery)}%`;
+
+  hoveredTarget = null;
+  const prompt = document.getElementById('interact-prompt');
+  prompt.style.display = 'none';
+  for (const drop of itemsState.worldDrops) {
+    if (drop.interior === worldState.currentInterior && camera.position.distanceTo(drop.mesh.position)  2.8) {
+      hoveredTarget = { kind 'DROP', data drop };
+      prompt.innerText = `Podnieś ${ITEM_CATALOG[drop.itemKey].name} [E]`;
+      prompt.style.display = 'block';
+      break;
+    }
+  }
+  if (!hoveredTarget) {
+    for (const obj of worldState.interactables) {
+      if (obj.interior === worldState.currentInterior && camera.position.distanceTo(obj.pos)  3.1) {
+        hoveredTarget = { kind 'WORLD', data obj };
+        prompt.innerText = obj.label;
+        prompt.style.display = 'block';
+        break;
+      }
+    }
+  }
+
+  miniCtx.fillStyle = '#060a10'; miniCtx.fillRect(0, 0, 155, 155);
+  miniCtx.strokeStyle = '#334155'; miniCtx.lineWidth = 4;
+  miniCtx.beginPath(); miniCtx.moveTo(77, 25); miniCtx.lineTo(77, 115); miniCtx.moveTo(20, 75); miniCtx.lineTo(135, 75); miniCtx.stroke();
+  miniCtx.fillStyle = '#facc15'; miniCtx.beginPath(); miniCtx.arc(77 + camera.position.x  0.65, 40 + camera.position.z  0.65, 4, 0, Math.PI  2); miniCtx.fill();
+
+  broadcastEvent({ type 'STATE', nick player.nick, role player.playerClass, x camera.position.x, z camera.position.z, interior worldState.currentInterior });
+  renderer.render(scene, camera);
+}
+animate();
+script
+body
+html
