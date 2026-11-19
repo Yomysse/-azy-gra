@@ -5,44 +5,51 @@
   <title>Martwa Częstotliwość – Łazy (ul. Papierowa)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { overflow: hidden; background: #040609; color: #e2e8f0; user-select: none; }
+    body { overflow: hidden; background: #030508; color: #e2e8f0; user-select: none; }
     #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+
+    /* Kinowa winieta i delikatne ziarno kamery nocnej */
+    #vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 5;
+      background: radial-gradient(circle at center, transparent 52%, rgba(2, 4, 8, 0.88) 100%);
+    }
 
     #mission-box {
       position: absolute; top: 18px; left: 18px; width: 380px;
-      background: rgba(8, 12, 18, 0.85); border-left: 3px solid #eab308;
-      padding: 14px 18px; border-radius: 0 6px 6px 0;
+      background: rgba(6, 10, 16, 0.84); border-left: 3px solid #eab308;
+      padding: 14px 18px; border-radius: 0 6px 6px 0; box-shadow: 0 8px 25px rgba(0,0,0,0.7);
     }
     #mission-header { display: flex; justify-content: space-between; align-items: center; }
     #mission-header h1 { font-size: 13px; letter-spacing: 1.3px; color: #facc15; text-transform: uppercase; }
-    #world-clock { font-family: monospace; font-size: 13px; color: #fb923c; font-weight: bold; }
-    #mission-act { font-size: 11px; color: #38bdf8; margin-top: 3px; font-weight: 700; text-transform: uppercase; }
+    #world-clock { font-family: monospace; font-size: 13px; color: #38bdf8; font-weight: bold; }
+    #mission-act { font-size: 11px; color: #94a3b8; margin-top: 3px; font-weight: 700; text-transform: uppercase; }
     #mission-desc { font-size: 13px; margin-top: 8px; color: #cbd5e1; line-height: 1.45; }
 
     #team-box {
       position: absolute; top: 18px; right: 18px; pointer-events: auto; width: 280px;
-      background: rgba(8, 12, 18, 0.85); border: 1px solid #334155;
+      background: rgba(6, 10, 16, 0.84); border: 1px solid #1e293b;
       padding: 12px 14px; border-radius: 6px;
     }
     #team-box h2 { font-size: 11px; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; }
     .member-row {
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(15, 23, 42, 0.7); padding: 5px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 4px;
+      background: rgba(15, 23, 42, 0.75); padding: 5px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 4px;
     }
     .member-role { font-size: 10px; color: #38bdf8; }
     #p2p-controls input, #p2p-controls button {
       width: 100%; margin-top: 5px; padding: 6px 8px; background: #0f172a;
-      border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 11px;
+      border: 1px solid #334155; color: #fff; border-radius: 4px; font-size: 11px;
     }
     #p2p-controls button { background: #eab308; color: #090d16; font-weight: bold; border: none; cursor: pointer; }
 
     #bottom-left { position: absolute; bottom: 18px; left: 18px; display: flex; align-items: flex-end; gap: 14px; }
     #minimap-wrap {
       width: 155px; height: 155px; border-radius: 50%; overflow: hidden;
-      border: 2px solid rgba(56, 189, 248, 0.5); background: rgba(5, 9, 14, 0.92);
+      border: 2px solid rgba(56, 189, 248, 0.45); background: rgba(4, 7, 12, 0.94);
+      box-shadow: 0 0 20px rgba(0,0,0,0.85);
     }
     #vitals-box {
-      background: rgba(8, 12, 18, 0.85); border: 1px solid #1e293b;
+      background: rgba(6, 10, 16, 0.84); border: 1px solid #1e293b;
       padding: 10px 14px; border-radius: 6px; width: 210px;
     }
     .vital-row { margin-bottom: 7px; }
@@ -56,15 +63,15 @@
 
     #inventory-bar {
       position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 8px; background: rgba(8, 12, 18, 0.85);
-      padding: 8px 12px; border-radius: 8px; border: 1px solid #334155;
+      display: flex; gap: 8px; background: rgba(6, 10, 16, 0.86);
+      padding: 8px 12px; border-radius: 8px; border: 1px solid #1e293b;
     }
     .inv-slot {
-      width: 84px; height: 68px; background: rgba(15, 23, 42, 0.8); border: 1px solid #475569;
+      width: 84px; height: 68px; background: rgba(15, 23, 42, 0.85); border: 1px solid #334155;
       border-radius: 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 6px;
     }
     .inv-slot.active { border-color: #facc15; transform: translateY(-4px); }
-    .inv-slot.class-slot { border-color: #38bdf8; background: rgba(14, 116, 144, 0.2); }
+    .inv-slot.class-slot { border-color: #38bdf8; background: rgba(14, 116, 144, 0.22); }
     .slot-key { font-size: 10px; color: #94a3b8; font-weight: bold; }
     .slot-name { font-size: 11px; color: #f8fafc; font-weight: 600; text-align: center; }
     .slot-qty { font-size: 10px; color: #facc15; text-align: right; font-family: monospace; }
@@ -75,18 +82,18 @@
 
     #hand-hud {
       position: absolute; bottom: 18px; right: 18px; text-align: right;
-      background: rgba(8, 12, 18, 0.85); padding: 10px 15px; border-radius: 6px; border-right: 3px solid #38bdf8;
+      background: rgba(6, 10, 16, 0.84); padding: 10px 15px; border-radius: 6px; border-right: 3px solid #38bdf8;
     }
     #hand-item-title { font-size: 14px; font-weight: bold; color: #f8fafc; }
     #hand-item-sub { font-size: 12px; color: #94a3b8; font-family: monospace; margin-top: 2px; }
 
     #crosshair {
-      position: absolute; top: 50%; left: 50%; width: 5px; height: 5px;
-      background: rgba(255,255,255,0.8); border-radius: 50%; transform: translate(-50%, -50%);
+      position: absolute; top: 50%; left: 50%; width: 4px; height: 4px;
+      background: rgba(255,255,255,0.75); border-radius: 50%; transform: translate(-50%, -50%);
     }
     #interact-prompt {
       position: absolute; bottom: 26%; left: 50%; transform: translateX(-50%);
-      background: rgba(8, 12, 18, 0.92); border: 1px solid #facc15; color: #facc15;
+      background: rgba(6, 10, 16, 0.94); border: 1px solid #facc15; color: #facc15;
       padding: 8px 18px; font-size: 13px; font-weight: bold; border-radius: 4px; display: none;
     }
 
@@ -110,7 +117,7 @@
     .btn-start:hover { background: #facc15; }
 
     #evidence-modal {
-      position: fixed; inset: 0; background: rgba(3, 5, 8, 0.9); z-index: 40;
+      position: fixed; inset: 0; background: rgba(3, 5, 8, 0.92); z-index: 40;
       display: none; align-items: center; justify-content: center; padding: 20px;
     }
     #evidence-box {
@@ -123,24 +130,24 @@
     #code-row input { padding: 8px; font-size: 18px; width: 140px; text-align: center; letter-spacing: 4px; background: #020617; border: 1px solid #facc15; color: #fff; }
     #code-row button, #btn-close-evidence { padding: 8px 16px; background: #eab308; color: #000; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin-top: 14px; }
     #status-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #38bdf8;
+      position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; color: #38bdf8;
       font-size: 11px; padding: 4px 12px; z-index: 99; text-align: center;
     }
   </style>
 
-  <!-- Niezawodne biblioteki UMD z Cloudflare CDN (zero problemów z importmap) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 </head>
 <body>
 
-<div id="status-bar">Ładowanie silnika 3D Łaz...</div>
+<div id="vignette"></div>
+<div id="status-bar">Generowanie tekstur PBR osiedla przy ul. Papierowej...</div>
 
 <div id="start-screen">
   <h1 style="color:#facc15; letter-spacing:2px; font-size:28px;">MARTWA CZĘSTOTLIWOŚĆ</h1>
   <p style="color:#38bdf8; font-size:13px; margin-top:4px;">Łazy • Osiedle ul. Papierowa • ul. Kwiatowa • Aleja Krakowska</p>
   <p style="color:#94a3b8; font-size:13px; max-width:660px; text-align:center; margin-top:10px;">
-    Wybierz swoją specjalizację. Każdy otrzymuje <b>1 unikalne urządzenie (Slot 0)</b>. Pozostałe przedmioty znajdziecie na mapie i podzielicie między siebie.
+    Wybierz swoją specjalizację. Każdy otrzymuje <b>1 unikalne urządzenie (Slot 0)</b>. Pozostałe przedmioty (broń, flary, klucze, noktowizor, leki) znajdziecie na mapie i podzielicie między siebie.
   </p>
 
   <div class="class-grid" id="class-grid">
@@ -171,7 +178,7 @@
     <input type="text" id="chapter-code-input" placeholder="Opcjonalny kod Aktu II" style="padding:10px; background:#0f172a; border:1px solid #475569; color:#fff; border-radius:4px; width:190px;" />
   </div>
 
-  <button class="btn-start" id="btn-enter-game" onclick="startGame()">WEJDŹ NA OSIEDLE (ZACHÓD SŁOŃCA)</button>
+  <button class="btn-start" id="btn-enter-game" onclick="startGame()">WEJDŹ NA OSIEDLE (ZMIERZCH)</button>
 </div>
 
 <div id="evidence-modal">
@@ -190,10 +197,10 @@
   <div id="mission-box">
     <div id="mission-header">
       <h1>Łazy • ul. Papierowa</h1>
-      <span id="world-clock">16:42 (Zachód słońca)</span>
+      <span id="world-clock">17:15 (Zmierzch / Mgła)</span>
     </div>
     <div id="mission-act">AKT I: Cisza na osiedlu</div>
-    <p id="mission-desc">Zaczynacie na dziedzińcu białych szeregówek przy ul. Papierowej. Przeszukajcie okolicę pomp ciepła, skrzynek pocztowych i zaparkowanych aut (kliknij na ekran gry, aby rozglądać się myszką).</p>
+    <p id="mission-desc">Jesteście na dziedzińcu białych szeregówek przy ul. Papierowej. Przeszukajcie okolicę pomp ciepła, skrzynek pocztowych i zaparkowanych aut (kliknij na ekran, aby rozglądać się myszką).</p>
   </div>
 
   <div id="team-box">
@@ -288,16 +295,8 @@ const ITEM_CATALOG = {
 };
 
 const player = {
-  nick: 'Agent_Łazy',
-  playerClass: 'detective',
-  hp: 100,
-  stamina: 100,
-  battery: 100,
-  adrenalineTimer: 0,
-  activeSlot: 0,
-  inventory: [null, null, null],
-  yaw: 0,
-  pitch: 0
+  nick: 'Agent_Łazy', playerClass: 'detective', hp: 100, stamina: 100, battery: 100,
+  adrenalineTimer: 0, activeSlot: 0, inventory: [null, null, null], yaw: 0, pitch: 0
 };
 
 function selectClass(clsKey, el) {
@@ -306,23 +305,136 @@ function selectClass(clsKey, el) {
   player.playerClass = clsKey;
 }
 
-if (typeof THREE === 'undefined') {
-  statusBar.style.background = '#991b1b';
-  statusBar.style.color = '#fff';
-  statusBar.innerText = 'Brak połączenia z biblioteką Three.js (sprawdź internet lub adblock).';
-} else {
-  statusBar.innerText = 'Silnik 3D gotowy! Wybierz klasę i kliknij WEJDŹ NA OSIEDLE.';
+// 1. GENERATOR TEKSTUR PBR (Mokra kostka z kałużami, tynk strukturalny, słoje drewna, siatka ogrodzeniowa, soczewka latarki)
+function createPBRTextures() {
+  // A) Kostka brukowa + mapa chropowatości z kałużami
+  const cDiff = document.createElement('canvas'); cDiff.width = 512; cDiff.height = 512;
+  const ctxD = cDiff.getContext('2d');
+  const cRough = document.createElement('canvas'); cRough.width = 512; cRough.height = 512;
+  const ctxR = cRough.getContext('2d');
+
+  ctxD.fillStyle = '#14171c'; ctxD.fillRect(0, 0, 512, 512);
+  ctxR.fillStyle = '#d8d8d8'; ctxR.fillRect(0, 0, 512, 512); // Domyślnie matowa kostka
+
+  for (let y = 0; y < 512; y += 32) {
+    const off = (y / 32) % 2 === 0 ? 0 : 32;
+    for (let x = -32; x < 512; x += 64) {
+      const shade = 42 + ((x * 7 + y * 13) % 18);
+      ctxD.fillStyle = `rgb(${shade},${shade + 3},${shade + 7})`;
+      ctxD.fillRect(x + off + 2, y + 2, 60, 28);
+      // Subtelny szum ziarna na kostce
+      for (let n = 0; n < 25; n++) {
+        ctxD.fillStyle = n % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.12)';
+        ctxD.fillRect(x + off + 4 + (n * 11) % 54, y + 4 + (n * 7) % 22, 2, 2);
+      }
+    }
+  }
+
+  // Kałuże na kostce (ciemniejsze w kolorze, lustrzane w roughnessMap)
+  const puddles = [[140, 160, 95], [370, 340, 115], [260, 90, 65], [90, 410, 80]];
+  puddles.forEach(([px, py, r]) => {
+    const gradD = ctxD.createRadialGradient(px, py, 5, px, py, r);
+    gradD.addColorStop(0, 'rgba(10, 14, 20, 0.65)');
+    gradD.addColorStop(1, 'rgba(10, 14, 20, 0)');
+    ctxD.fillStyle = gradD; ctxD.beginPath(); ctxD.arc(px, py, r, 0, Math.PI * 2); ctxD.fill();
+
+    const gradR = ctxR.createRadialGradient(px, py, 5, px, py, r);
+    gradR.addColorStop(0, '#0a0a0a'); // Lustrzane odbicie wody
+    gradR.addColorStop(0.75, '#222222');
+    gradR.addColorStop(1, 'rgba(216,216,216,0)');
+    ctxR.fillStyle = gradR; ctxR.beginPath(); ctxR.arc(px, py, r, 0, Math.PI * 2); ctxR.fill();
+  });
+
+  const cobbleMap = new THREE.CanvasTexture(cDiff);
+  const cobbleRough = new THREE.CanvasTexture(cRough);
+  cobbleMap.wrapS = cobbleMap.wrapT = cobbleRough.wrapS = cobbleRough.wrapT = THREE.RepeatWrapping;
+  cobbleMap.repeat.set(75, 75); cobbleRough.repeat.set(75, 75);
+
+  // B) Ziarnisty biały tynk strukturalny szeregówek
+  const cPlaster = document.createElement('canvas'); cPlaster.width = 512; cPlaster.height = 512;
+  const ctxP = cPlaster.getContext('2d');
+  ctxP.fillStyle = '#cfd6de'; ctxP.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 18000; i++) {
+    const v = 190 + (i % 45);
+    ctxP.fillStyle = `rgb(${v},${v + 2},${v + 5})`;
+    ctxP.fillRect((i * 73) % 512, (i * 137) % 512, 2, 2);
+  }
+  const plasterTex = new THREE.CanvasTexture(cPlaster);
+  plasterTex.wrapS = plasterTex.wrapT = THREE.RepeatWrapping;
+  plasterTex.repeat.set(4, 2);
+
+  // C) Drewniane deski elewacyjne (słoje drewna)
+  const cWood = document.createElement('canvas'); cWood.width = 256; cWood.height = 512;
+  const ctxW = cWood.getContext('2d');
+  ctxW.fillStyle = '#6e3b16'; ctxW.fillRect(0, 0, 256, 512);
+  for (let x = 0; x < 256; x += 24) {
+    ctxW.fillStyle = '#3d1e08'; ctxW.fillRect(x, 0, 2, 512);
+    for (let y = 0; y < 512; y += 4) {
+      ctxW.fillStyle = (x + y) % 16 === 0 ? 'rgba(255,200,150,0.06)' : 'rgba(0,0,0,0.12)';
+      ctxW.fillRect(x + 3, y, 18, 2);
+    }
+  }
+  const woodTex = new THREE.CanvasTexture(cWood);
+
+  // D) Ogrodzenie panelowe z siatki (przezroczyste oczka)
+  const cFence = document.createElement('canvas'); cFence.width = 256; cFence.height = 256;
+  const ctxF = cFence.getContext('2d');
+  ctxF.clearRect(0, 0, 256, 256);
+  ctxF.strokeStyle = '#334155'; ctxF.lineWidth = 4;
+  for (let x = 0; x <= 256; x += 16) { ctxF.beginPath(); ctxF.moveTo(x, 0); ctxF.lineTo(x, 256); ctxF.stroke(); }
+  for (let y = 0; y <= 256; y += 32) { ctxF.beginPath(); ctxF.moveTo(0, y); ctxF.lineTo(256, y); ctxF.stroke(); }
+  const fenceTex = new THREE.CanvasTexture(cFence);
+  fenceTex.wrapS = fenceTex.wrapT = THREE.RepeatWrapping;
+  fenceTex.repeat.set(3, 1);
+
+  // E) Projekcja soczewki latarki taktycznej (pierścienie LED)
+  const cBeam = document.createElement('canvas'); cBeam.width = 256; cBeam.height = 256;
+  const ctxB = cBeam.getContext('2d');
+  const gBeam = ctxB.createRadialGradient(128, 128, 8, 128, 128, 124);
+  gBeam.addColorStop(0, 'rgba(255, 252, 240, 1)');
+  gBeam.addColorStop(0.45, 'rgba(235, 242, 255, 0.72)');
+  gBeam.addColorStop(0.72, 'rgba(180, 200, 230, 0.25)');
+  gBeam.addColorStop(0.82, 'rgba(220, 235, 255, 0.42)'); // Pierścień odbłyśnika
+  gBeam.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctxB.fillStyle = gBeam; ctxB.fillRect(0, 0, 256, 256);
+  const beamTex = new THREE.CanvasTexture(cBeam);
+
+  // F) Poświata latarni ulicznych we mgle
+  const cGlow = document.createElement('canvas'); cGlow.width = 128; cGlow.height = 128;
+  const ctxG = cGlow.getContext('2d');
+  const gGlow = ctxG.createRadialGradient(64, 64, 2, 64, 64, 62);
+  gGlow.addColorStop(0, 'rgba(200, 225, 255, 0.95)');
+  gGlow.addColorStop(0.35, 'rgba(147, 197, 253, 0.35)');
+  gGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctxG.fillStyle = gGlow; ctxG.fillRect(0, 0, 128, 128);
+  const glowTex = new THREE.CanvasTexture(cGlow);
+
+  return { cobbleMap, cobbleRough, plasterTex, woodTex, fenceTex, beamTex, glowTex };
 }
 
-// INICJALIZACJA SCENY THREE.JS (r128 UMD)
+function makeSignTex(text, bg = '#14532d', fg = '#f8fafc') {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, 512, 128);
+  ctx.strokeStyle = fg; ctx.lineWidth = 6; ctx.strokeRect(6, 6, 500, 116);
+  ctx.fillStyle = fg; ctx.font = 'bold 40px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, 256, 66);
+  return new THREE.CanvasTexture(c);
+}
+
+// 2. INICJALIZACJA SCENY I KAMERY
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 500);
-camera.position.set(0, 1.75, 6.5);
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 450);
+camera.position.set(0, 1.72, 7.5);
 camera.rotation.order = 'YXZ';
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Optymalizacja pod MX350
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 document.body.appendChild(renderer.domElement);
 
 window.addEventListener('resize', () => {
@@ -331,110 +443,170 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const flashlight = new THREE.SpotLight(0xfffbeb, 2.6, 55, Math.PI / 5, 0.45, 1.0);
+const tex = createPBRTextures();
+
+// Latarka taktyczna (po lewej stronie ekranu) + Pistolet Glock-17 (po prawej stronie)
+const flashlight = new THREE.SpotLight(0xf8fafc, 3.2, 58, Math.PI / 5.4, 0.45, 1.15);
+flashlight.castShadow = true;
+flashlight.shadow.mapSize.set(1024, 1024);
+flashlight.shadow.bias = -0.0005;
+flashlight.position.set(-0.22, -0.18, -0.25);
 camera.add(flashlight);
 camera.add(flashlight.target);
-flashlight.target.position.set(0, -0.18, -10);
+flashlight.target.position.set(-0.08, -0.22, -12);
 scene.add(camera);
 
-const gunMesh = new THREE.Mesh(
-  new THREE.BoxGeometry(0.045, 0.055, 0.28),
-  new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 })
+const handsGroup = new THREE.Group();
+// Szczegółowy model latarki w lewej ręce
+const torchBody = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.022, 0.024, 0.22, 16),
+  new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.85, roughness: 0.25 })
 );
-gunMesh.position.set(0.24, -0.22, -0.44);
-gunMesh.visible = false;
-camera.add(gunMesh);
+torchBody.rotation.x = Math.PI / 2;
+torchBody.position.set(-0.25, -0.22, -0.38);
+const torchHead = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.032, 0.024, 0.06, 16),
+  new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 })
+);
+torchHead.rotation.x = Math.PI / 2;
+torchHead.position.set(-0.25, -0.22, -0.50);
+handsGroup.add(torchBody, torchHead);
 
-// ŚWIAT ŁAZ
+// Szczegółowy model pistoletu z tłumikiem w prawej ręce
+const gunGroup = new THREE.Group();
+const gunMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.88, roughness: 0.22 });
+const gunSlide = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.044, 0.22), gunMat);
+gunSlide.position.set(0.24, -0.20, -0.40);
+const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.13, 12), gunMat);
+gunBarrel.rotation.x = Math.PI / 2; gunBarrel.position.set(0.24, -0.195, -0.56);
+const gunGrip = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.11, 0.045), new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.9 }));
+gunGrip.position.set(0.24, -0.26, -0.33); gunGrip.rotation.x = 0.24;
+const muzzleFlash = new THREE.PointLight(0xf59e0b, 0, 12);
+muzzleFlash.position.set(0.24, -0.19, -0.66);
+gunGroup.add(gunSlide, gunBarrel, gunGrip, muzzleFlash);
+gunGroup.visible = false;
+handsGroup.add(gunGroup);
+camera.add(handsGroup);
+
+// 3. MROCZNY ŚWIAT ŁAZ (Chłodny zmierzch -> Gęsta ponura noc)
 const worldState = { isInside: false, currentInterior: null, elapsedMinutes: 0, streetLamps: [], interactables: [] };
 const itemsState = { act: 1, hasPowerInBunker: false, uvMode: false, nvgMode: false, worldDrops: [] };
 
-function makeCobbleTex() {
-  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#181c22'; ctx.fillRect(0, 0, 256, 256);
-  for (let y = 0; y < 256; y += 16) {
-    const off = (y / 16) % 2 === 0 ? 0 : 16;
-    for (let x = -16; x < 256; x += 32) {
-      ctx.fillStyle = (x + y) % 64 === 0 ? '#333b45' : '#272e36';
-      ctx.fillRect(x + off + 1, y + 1, 30, 14);
-    }
-  }
-  const t = new THREE.CanvasTexture(c);
-  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(110, 110);
-  return t;
-}
+// Brak jaskrawego pomarańczowego światła! Chłodny, pochmurny zmierzch nad Łazami
+const moonLight = new THREE.DirectionalLight(0x64748b, 0.55);
+moonLight.position.set(-60, 45, 40);
+moonLight.castShadow = true;
+scene.add(moonLight);
 
-function makeSignTex(text, bg = '#15803d', fg = '#ffffff') {
-  const c = document.createElement('canvas'); c.width = 512; c.height = 128;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, 512, 128);
-  ctx.strokeStyle = fg; ctx.lineWidth = 6; ctx.strokeRect(6, 6, 500, 116);
-  ctx.fillStyle = fg; ctx.font = 'bold 42px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(text, 256, 66);
-  return new THREE.CanvasTexture(c);
-}
-
-const sunLight = new THREE.DirectionalLight(0xff7b47, 1.8);
-sunLight.position.set(-90, 28, 60);
-scene.add(sunLight);
-
-const hemiLight = new THREE.HemisphereLight(0xf97316, 0x1e293b, 0.85);
+const hemiLight = new THREE.HemisphereLight(0x334155, 0x090d16, 0.42);
 scene.add(hemiLight);
 
-scene.background = new THREE.Color(0x2a1815);
-scene.fog = new THREE.FogExp2(0x261715, 0.011);
+scene.background = new THREE.Color(0x0d131c);
+scene.fog = new THREE.FogExp2(0x0d131c, 0.022);
 
 const exteriorGroup = new THREE.Group();
 scene.add(exteriorGroup);
 
+// Mokra kostka brukowa z kałużami
 const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(600, 600),
-  new THREE.MeshStandardMaterial({ map: makeCobbleTex(), roughness: 0.4, metalness: 0.3 })
+  new THREE.PlaneGeometry(550, 550),
+  new THREE.MeshStandardMaterial({
+    map: tex.cobbleMap,
+    bumpMap: tex.cobbleMap,
+    bumpScale: 0.03,
+    roughnessMap: tex.cobbleRough,
+    roughness: 0.75,
+    metalness: 0.35
+  })
 );
 ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
 exteriorGroup.add(ground);
 
+// Pas Alei Krakowskiej
 const aleja = new THREE.Mesh(
   new THREE.PlaneGeometry(500, 22),
-  new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.3, metalness: 0.5 })
+  new THREE.MeshStandardMaterial({ color: 0x0b0e14, roughness: 0.18, metalness: 0.65 })
 );
-aleja.rotation.x = -Math.PI / 2; aleja.position.set(0, 0.03, 75);
+aleja.rotation.x = -Math.PI / 2; aleja.position.set(0, 0.02, 75);
 exteriorGroup.add(aleja);
 
+// SZEREGÓWKI PRZY UL. PAPIEROWEJ (Wierny układ z Twoich zdjęć z Otodom)
 function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
   const group = new THREE.Group();
   group.position.set(x, 0, z); group.rotation.y = rotY;
 
-  const plaster = new THREE.MeshStandardMaterial({ color: 0xebeef2, roughness: 0.7 });
-  const wood = new THREE.MeshStandardMaterial({ color: 0x9c5a25, roughness: 0.65 });
-  const roofMat = new THREE.MeshStandardMaterial({ color: 0x1e242b, roughness: 0.55 });
-  const glass = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, metalness: 0.9 });
-  const pumpMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.45, roughness: 0.4 });
+  const plasterMat = new THREE.MeshStandardMaterial({ map: tex.plasterTex, bumpMap: tex.plasterTex, bumpScale: 0.02, roughness: 0.85 });
+  const woodMat = new THREE.MeshStandardMaterial({ map: tex.woodTex, bumpMap: tex.woodTex, bumpScale: 0.025, roughness: 0.65 });
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.55, metalness: 0.3 });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
+  const glassDark = new THREE.MeshStandardMaterial({ color: 0x050911, roughness: 0.08, metalness: 0.92 });
+  const glassWarm = new THREE.MeshStandardMaterial({ color: 0x1e1b18, emissive: 0x78350f, emissiveIntensity: 0.35, roughness: 0.15 });
+  const pumpMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.55, roughness: 0.35 });
+  const fenceMat = new THREE.MeshStandardMaterial({ map: tex.fenceTex, transparent: true, alphaTest: 0.3, side: THREE.DoubleSide });
 
   const segW = 5.4, totalW = segW * segments;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(totalW, 6.2, 9.6), plaster);
+
+  // Główna bryła z cokołem
+  const body = new THREE.Mesh(new THREE.BoxGeometry(totalW, 6.2, 9.6), plasterMat);
   body.position.set(0, 3.1, 0);
+  body.castShadow = true; body.receiveShadow = true;
   group.add(body);
 
+  // Dwuspadowy grafitowy dach z gzymsem
   const roofShape = new THREE.Shape();
-  roofShape.moveTo(-4.95, 0); roofShape.lineTo(0, 2.35); roofShape.lineTo(4.95, 0); roofShape.closePath();
-  const roof = new THREE.Mesh(new THREE.ExtrudeGeometry(roofShape, { depth: totalW + 0.3, bevelEnabled: false }), roofMat);
-  roof.rotation.y = Math.PI / 2; roof.position.set(-totalW / 2 - 0.15, 6.2, 0);
+  roofShape.moveTo(-5.05, 0); roofShape.lineTo(0, 2.4); roofShape.lineTo(5.05, 0); roofShape.closePath();
+  const roof = new THREE.Mesh(new THREE.ExtrudeGeometry(roofShape, { depth: totalW + 0.4, bevelEnabled: false }), roofMat);
+  roof.rotation.y = Math.PI / 2; roof.position.set(-totalW / 2 - 0.2, 6.2, 0);
   group.add(roof);
 
   for (let i = 0; i < segments; i++) {
     const sx = -totalW / 2 + segW * (i + 0.5);
-    const woodStrip = new THREE.Mesh(new THREE.BoxGeometry(0.95, 5.3, 0.08), wood); woodStrip.position.set(sx - 0.85, 3.1, 4.82);
-    const winTop = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.85, 0.1), glass); winTop.position.set(sx - 1.45, 4.45, 4.82);
-    const winBot = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.65, 0.1), glass); winBot.position.set(sx + 1.15, 1.5, 4.82);
-    const door = new THREE.Mesh(new THREE.BoxGeometry(1.05, 2.15, 0.12), wood); door.position.set(sx - 0.2, 1.08, 4.82);
-    const canopy = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.14, 0.95), roofMat); canopy.position.set(sx - 0.2, 2.38, 5.2);
-    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.1, 0.42), pumpMat); pump.position.set(sx + 1.55, 0.55, 5.28);
-    group.add(woodStrip, winTop, winBot, door, canopy, pump);
+
+    // Pionowa drewniana wstawka elewacyjna (jak na zdjęciach)
+    const woodStrip = new THREE.Mesh(new THREE.BoxGeometry(0.96, 5.4, 0.08), woodMat);
+    woodStrip.position.set(sx - 0.85, 3.1, 4.82);
+
+    // Okno na piętrze z ramą i parapetem
+    const winTopFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.92, 0.12), frameMat);
+    winTopFrame.position.set(sx - 1.45, 4.45, 4.82);
+    const isLit = (houseIndexOffset + i === 4); // W Segmencie nr 4 pali się przytłumione światło na piętrze!
+    const winTopGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.78, 0.14), isLit ? glassWarm : glassDark);
+    winTopGlass.position.set(sx - 1.45, 4.45, 4.83);
+
+    // Okno na parterze z ramą
+    const winBotFrame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 1.72, 0.12), frameMat);
+    winBotFrame.position.set(sx + 1.15, 1.5, 4.82);
+    const winBotGlass = new THREE.Mesh(new THREE.BoxGeometry(1.04, 1.58, 0.14), glassDark);
+    winBotGlass.position.set(sx + 1.15, 1.5, 4.83);
+
+    // Drzwi wejściowe z ościeżnicą, klamką i zadaszeniem
+    const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.14, 2.22, 0.14), frameMat);
+    doorFrame.position.set(sx - 0.2, 1.11, 4.82);
+    const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.12, 0.16), woodMat);
+    doorLeaf.position.set(sx - 0.2, 1.08, 4.83);
+    const canopy = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.14, 1.0), roofMat);
+    canopy.position.set(sx - 0.2, 2.42, 5.25);
+
+    // Rynna spustowa między segmentami
+    const gutter = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 6.2, 8), frameMat);
+    gutter.position.set(sx + segW / 2, 3.1, 4.88);
+
+    // Jednostka zewnętrzna pompy ciepła z kratką wentylatora
+    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.96, 1.12, 0.44), pumpMat);
+    pump.position.set(sx + 1.55, 0.56, 5.32);
+    pump.castShadow = true;
+    const fanGrill = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 16), frameMat);
+    fanGrill.rotation.x = Math.PI / 2; fanGrill.position.set(sx + 1.4, 0.62, 5.55);
+
+    // Metalowe ogrodzenie panelowe ogródka przed wejściem
+    const gardenFence = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.35), fenceMat);
+    gardenFence.position.set(sx + 1.3, 0.68, 6.4);
+
+    group.add(woodStrip, winTopFrame, winTopGlass, winBotFrame, winBotGlass, doorFrame, doorLeaf, canopy, gutter, pump, fanGrill, gardenFence);
 
     if (houseIndexOffset + i === 4) {
-      const doorWorldPos = new THREE.Vector3(sx - 0.2, 1.2, 5.6);
+      const doorWorldPos = new THREE.Vector3(sx - 0.2, 1.2, 5.8);
       doorWorldPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY);
       doorWorldPos.add(new THREE.Vector3(x, 0, z));
       worldState.interactables.push({ id: 'door_segment_4', pos: doorWorldPos, label: 'Wejdź do wnętrza Segmentu nr 4 [E]', interior: null, type: 'ENTER_INTERIOR', targetInterior: 'segment4' });
@@ -443,89 +615,126 @@ function buildTerracedBlock(x, z, rotY, segments, houseIndexOffset) {
   exteriorGroup.add(group);
 }
 
-buildTerracedBlock(10.5, -2, -Math.PI / 2, 4, 1);
-buildTerracedBlock(-10.5, -2, Math.PI / 2, 4, 5);
+buildTerracedBlock(10.8, -2, -Math.PI / 2, 4, 1);
+buildTerracedBlock(-10.8, -2, Math.PI / 2, 4, 5);
 
-const mailboxBank = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.35, 2.2), new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.6 }));
-mailboxBank.position.set(5.2, 0.68, 9.5);
+// Skrzynki pocztowe przy bramie wjazdowej na dziedziniec
+const mailboxBank = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.38, 2.3), new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.65, roughness: 0.35 }));
+mailboxBank.position.set(5.3, 0.69, 9.5);
 exteriorGroup.add(mailboxBank);
 
-// Las sosnowy za osiedlem
-const trunkMat = new THREE.MeshStandardMaterial({ color: 0x422006 });
-const pineMat = new THREE.MeshStandardMaterial({ color: 0x143322, roughness: 0.9 });
-for (let i = 0; i < 60; i++) {
-  const tx = -36 + (i % 12) * 6 + Math.sin(i) * 1.8;
-  const tz = -18 - Math.floor(i / 12) * 7.5;
-  const h = 5.0 + (i % 4) * 1.3;
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.22, h * 0.45), trunkMat); trunk.position.set(tx, h * 0.22, tz);
-  const crown = new THREE.Mesh(new THREE.ConeGeometry(1.55, h * 0.85, 7), pineMat); crown.position.set(tx, h * 0.68, tz);
-  exteriorGroup.add(trunk, crown);
+// Zaparkowane auta z reflektorami pozycyjnymi
+function buildParkedCar(x, z, rotY, colorHex) {
+  const car = new THREE.Group();
+  car.position.set(x, 0, z); car.rotation.y = rotY;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.72, 4.25), new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.8, roughness: 0.22 }));
+  body.position.y = 0.62; body.castShadow = true;
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.58, 2.15), new THREE.MeshStandardMaterial({ color: 0x050911, metalness: 0.92, roughness: 0.08 }));
+  cabin.position.set(0, 1.22, -0.2);
+  car.add(body, cabin);
+  exteriorGroup.add(car);
+}
+buildParkedCar(4.6, 2.5, Math.PI / 2, 0x64748b);
+buildParkedCar(4.6, -2.2, Math.PI / 2, 0x111827);
+
+// Wielowarstwowe sosny za osiedlem (zamiast jednego stożka)
+const barkMat = new THREE.MeshStandardMaterial({ color: 0x291709, roughness: 0.95 });
+const pineDarkMat = new THREE.MeshStandardMaterial({ color: 0x0b1f14, roughness: 0.9 });
+for (let i = 0; i < 65; i++) {
+  const tx = -38 + (i % 13) * 6.2 + Math.sin(i * 2.1) * 1.9;
+  const tz = -17 - Math.floor(i / 13) * 7.2;
+  const h = 5.5 + (i % 4) * 1.4;
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.24, h * 0.55, 7), barkMat);
+  trunk.position.set(tx, h * 0.27, tz);
+  exteriorGroup.add(trunk);
+
+  for (let layer = 0; layer < 3; layer++) {
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(1.6 - layer * 0.35, h * 0.38, 7), pineDarkMat);
+    cone.position.set(tx, h * (0.48 + layer * 0.22), tz);
+    exteriorGroup.add(cone);
+  }
 }
 
 // Tabliczka ul. Papierowa + żółty dom przy 6 Kwiatowej
-const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6), new THREE.MeshStandardMaterial({ color: 0x94a3b8 }));
+const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 }));
 signPole.position.set(-3.8, 1.3, 34);
 const streetSign = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.24, 0.04), new THREE.MeshStandardMaterial({ map: makeSignTex('ul. Papierowa') }));
 streetSign.position.set(-3.8, 2.45, 34);
-const yellowHouse = new THREE.Mesh(new THREE.BoxGeometry(9.5, 6.5, 8.5), new THREE.MeshStandardMaterial({ color: 0xd9b35f, roughness: 0.8 }));
+const yellowHouse = new THREE.Mesh(new THREE.BoxGeometry(9.5, 6.5, 8.5), new THREE.MeshStandardMaterial({ color: 0x8a723c, map: tex.plasterTex, roughness: 0.85 }));
 yellowHouse.position.set(-14, 3.25, 38);
 exteriorGroup.add(signPole, streetSign, yellowHouse);
 
+// Latarnie uliczne z miękką poświatą we mgle (Sprite)
+for (let z = 8; z <= 68; z += 18) {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 6.5), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8 }));
+  pole.position.set(-3.8, 3.25, z);
+  const bulb = new THREE.PointLight(0x93c5fd, 1.8, 28);
+  bulb.position.set(-2.9, 6.1, z);
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex.glowTex, color: 0xbfdbfe, transparent: true, blending: THREE.AdditiveBlending }));
+  sprite.scale.set(4.5, 4.5, 1);
+  sprite.position.set(-2.9, 6.1, z);
+  exteriorGroup.add(pole, bulb, sprite);
+  worldState.streetLamps.push(bulb);
+}
+
+// Pas usługowy przy Alei Krakowskiej + Maszt radiowy
 function buildCommercialBuilding(x, z, w, h, d, colorHex, signText, interiorKey) {
-  const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.65 }));
+  const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshStandardMaterial({ color: colorHex, map: tex.plasterTex, roughness: 0.75 }));
   b.position.set(x, h / 2, z);
-  const banner = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.75, 1.1), new THREE.MeshBasicMaterial({ map: makeSignTex(signText, '#0f172a', '#facc15') }));
+  const banner = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.75, 1.1), new THREE.MeshBasicMaterial({ map: makeSignTex(signText, '#090d16', '#facc15') }));
   banner.position.set(x, h - 0.8, z + d / 2 + 0.05);
   exteriorGroup.add(b, banner);
   worldState.interactables.push({ id: `enter_${interiorKey}`, pos: new THREE.Vector3(x, 1.2, z + d / 2 + 1.4), label: `Wejdź do środka: ${signText} [E]`, interior: null, type: 'ENTER_INTERIOR', targetInterior: interiorKey });
 }
 
-buildCommercialBuilding(-18, 60, 14, 4.6, 10, 0xcbd5e1, 'CARREFOUR EXPRESS', 'carrefour');
-buildCommercialBuilding(16, 60, 15, 5.2, 11, 0x991b1b, "LION'S GARAGE / OIL GARAŻ", 'garage');
+buildCommercialBuilding(-18, 60, 14, 4.6, 10, 0x94a3b8, 'CARREFOUR EXPRESS', 'carrefour');
+buildCommercialBuilding(16, 60, 15, 5.2, 11, 0x7f1d1d, "LION'S GARAGE / OIL GARAŻ", 'garage');
 
-const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.95, 68, 6), new THREE.MeshStandardMaterial({ color: 0x64748b, wireframe: true }));
+const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.95, 68, 6), new THREE.MeshStandardMaterial({ color: 0x475569, wireframe: true }));
 tower.position.set(14, 34, 110);
-const towerBeacon = new THREE.PointLight(0xef4444, 3.5, 90); towerBeacon.position.set(14, 67, 110);
-const bunkerHatch = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.4, 3.2), new THREE.MeshStandardMaterial({ color: 0x334155 }));
+const towerBeacon = new THREE.PointLight(0xef4444, 4.0, 90); towerBeacon.position.set(14, 67, 110);
+const towerSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex.glowTex, color: 0xef4444, transparent: true, blending: THREE.AdditiveBlending }));
+towerSprite.scale.set(8, 8, 1); towerSprite.position.set(14, 67, 110);
+const bunkerHatch = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.4, 3.2), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
 bunkerHatch.position.set(14, 0.7, 104);
-exteriorGroup.add(tower, towerBeacon, bunkerHatch);
+exteriorGroup.add(tower, towerBeacon, towerSprite, bunkerHatch);
 worldState.interactables.push({ id: 'enter_bunker', pos: new THREE.Vector3(14, 1.2, 101.8), label: 'Zejdź do podziemnej stacji pod masztem [E]', interior: null, type: 'ENTER_INTERIOR', targetInterior: 'bunker' });
 
-// 4 otwarte wnętrza
+// 4 Otwarte wnętrza
 function buildInteriorRoom(w, d, wallCol, floorCol, exitLabel, exitOutsidePos) {
   const grp = new THREE.Group(); grp.visible = false; scene.add(grp);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: floorCol })); floor.rotation.x = -Math.PI / 2;
-  const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: 0x0f172a })); ceiling.rotation.x = Math.PI / 2; ceiling.position.y = 3.3;
-  const wMat = new THREE.MeshStandardMaterial({ color: wallCol });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: floorCol, map: tex.woodTex, roughness: 0.5 })); floor.rotation.x = -Math.PI / 2;
+  const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: 0x090d16 })); ceiling.rotation.x = Math.PI / 2; ceiling.position.y = 3.3;
+  const wMat = new THREE.MeshStandardMaterial({ color: wallCol, map: tex.plasterTex, roughness: 0.85 });
   const wN = new THREE.Mesh(new THREE.BoxGeometry(w, 3.3, 0.3), wMat); wN.position.set(0, 1.65, -d / 2);
   const wS = new THREE.Mesh(new THREE.BoxGeometry(w, 3.3, 0.3), wMat); wS.position.set(0, 1.65, d / 2);
   const wW = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wW.position.set(-w / 2, 1.65, 0);
   const wE = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.3, d), wMat); wE.position.set(w / 2, 1.65, 0);
-  const table = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.8, 1.1), new THREE.MeshStandardMaterial({ color: 0x451a03 })); table.position.set(0, 0.4, -d / 2 + 1.8);
-  const roomLight = new THREE.PointLight(0xfef3c7, 1.4, 18); roomLight.position.set(0, 2.8, 0);
+  const table = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.8, 1.1), new THREE.MeshStandardMaterial({ map: tex.woodTex })); table.position.set(0, 0.4, -d / 2 + 1.8);
+  const roomLight = new THREE.PointLight(0xfde68a, 1.1, 16); roomLight.position.set(0, 2.8, 0);
   grp.add(floor, ceiling, wN, wS, wW, wE, table, roomLight);
   return { group: grp, exitLabel, exitOutsidePos, depth: d };
 }
 
 const interiors = {
-  segment4: buildInteriorRoom(11, 13, 0xe2e8f0, 0x451a03, 'Wyjdź na dziedziniec osiedla [E]', new THREE.Vector3(5.2, 1.75, 4.5)),
-  carrefour: buildInteriorRoom(14, 12, 0xdbeafe, 0x1e293b, 'Wyjdź przed Carrefour Express [E]', new THREE.Vector3(-18, 1.75, 67)),
-  garage: buildInteriorRoom(15, 14, 0x334155, 0x0f172a, "Wyjdź z warsztatu Lion's Garage [E]", new THREE.Vector3(16, 1.75, 68)),
-  bunker: buildInteriorRoom(12, 18, 0x1c1917, 0x090d16, 'Wyjdź na powierzchnię pod masztem [E]', new THREE.Vector3(14, 1.75, 100))
+  segment4: buildInteriorRoom(11, 13, 0xcbd5e1, 0x3f2305, 'Wyjdź na dziedziniec osiedla [E]', new THREE.Vector3(5.2, 1.72, 4.5)),
+  carrefour: buildInteriorRoom(14, 12, 0x94a3b8, 0x1e293b, 'Wyjdź przed Carrefour Express [E]', new THREE.Vector3(-18, 1.72, 67)),
+  garage: buildInteriorRoom(15, 14, 0x334155, 0x0f172a, "Wyjdź z warsztatu Lion's Garage [E]", new THREE.Vector3(16, 1.72, 68)),
+  bunker: buildInteriorRoom(12, 18, 0x1c1917, 0x090d16, 'Wyjdź na powierzchnię pod masztem [E]', new THREE.Vector3(14, 1.72, 100))
 };
 
 Object.entries(interiors).forEach(([key, room]) => {
   worldState.interactables.push({ id: `exit_${key}`, pos: new THREE.Vector3(0, 1.2, room.depth / 2 - 0.8), label: room.exitLabel, interior: key, type: 'EXIT_INTERIOR', exitOutsidePos: room.exitOutsidePos });
 });
 
-// Napis UV na elewacji Segmentu 4
+// Napis UV na ścianie przy Segmencie nr 4
 const uvClues = [];
 (function() {
   const c = document.createElement('canvas'); c.width = 512; c.height = 128;
   const ctx = c.getContext('2d'); ctx.fillStyle = '#a855f7'; ctx.font = 'bold 34px monospace'; ctx.textAlign = 'center';
   ctx.fillText('KOD SEJFU: 2318', 256, 70);
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.65), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, opacity: 0.0 }));
-  mesh.position.set(5.65, 1.8, -5.8); mesh.rotation.y = -Math.PI / 2;
+  mesh.position.set(5.95, 1.8, -5.8); mesh.rotation.y = -Math.PI / 2;
   scene.add(mesh);
   uvClues.push({ mesh, interior: null });
 })();
@@ -533,27 +742,29 @@ const uvClues = [];
 function spawnWorldDrop(itemKey, pos, interiorKey = null, qty = 1, ammo = 0) {
   const def = ITEM_CATALOG[itemKey]; if (!def) return;
   const group = new THREE.Group(); group.position.copy(pos);
-  const box = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.22, 0.32), new THREE.MeshStandardMaterial({ color: def.type === 'weapon' ? 0xef4444 : 0xeab308 }));
-  const glow = new THREE.PointLight(0xfacc15, 1.2, 3.5); glow.position.y = 0.35;
+  const box = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.18, 0.28), new THREE.MeshStandardMaterial({ color: def.type === 'weapon' ? 0xef4444 : 0xd97706, metalness: 0.6, roughness: 0.3 }));
+  const glow = new THREE.PointLight(0xfacc15, 0.9, 2.8); glow.position.y = 0.28;
   group.add(box, glow);
   if (interiorKey && interiors[interiorKey]) interiors[interiorKey].group.add(group);
   else scene.add(group);
   itemsState.worldDrops.push({ id: 'd_' + Math.random().toString(36).slice(2, 9), itemKey, qty, ammo: ammo || def.maxAmmo || 0, pos: pos.clone(), interior: interiorKey, mesh: group });
 }
 
-spawnWorldDrop('battery', new THREE.Vector3(4.5, 0.85, 2.5), null, 2);
-spawnWorldDrop('bandage', new THREE.Vector3(-4.2, 0.2, 6.0), null, 1);
-spawnWorldDrop('flare', new THREE.Vector3(5.2, 1.4, 9.5), null, 2);
-spawnWorldDrop('tape_1', new THREE.Vector3(0, 0.9, -4.7), 'segment4', 1);
-spawnWorldDrop('nvg', new THREE.Vector3(-4.5, 0.9, -3.5), 'carrefour', 1);
-spawnWorldDrop('shotgun', new THREE.Vector3(0, 0.9, -5.2), 'garage', 1, 6);
-spawnWorldDrop('keycard_bunker', new THREE.Vector3(4.8, 0.9, -4.0), 'garage', 1);
-spawnWorldDrop('fuse', new THREE.Vector3(-2.0, 0.2, 2.0), 'garage', 1);
+spawnWorldDrop('battery', new THREE.Vector3(4.6, 0.98, 2.5), null, 2);
+spawnWorldDrop('bandage', new THREE.Vector3(-4.2, 0.15, 6.0), null, 1);
+spawnWorldDrop('flare', new THREE.Vector3(5.3, 1.42, 9.5), null, 2);
+spawnWorldDrop('tape_1', new THREE.Vector3(0, 0.88, -4.7), 'segment4', 1);
+spawnWorldDrop('nvg', new THREE.Vector3(-4.5, 0.88, -3.5), 'carrefour', 1);
+spawnWorldDrop('shotgun', new THREE.Vector3(0, 0.88, -5.2), 'garage', 1, 6);
+spawnWorldDrop('keycard_bunker', new THREE.Vector3(4.8, 0.88, -4.0), 'garage', 1);
+spawnWorldDrop('fuse', new THREE.Vector3(-2.0, 0.15, 2.0), 'garage', 1);
 
 worldState.interactables.push({ id: 'safe_segment_4', pos: new THREE.Vector3(4.2, 1.2, -5.2), label: 'Otwórz sejf w kotłowni Segmentu nr 4 [E]', interior: 'segment4', type: 'SAFE_PUZZLE' });
 worldState.interactables.push({ id: 'bunker_terminal', pos: new THREE.Vector3(0, 1.2, -7.2), label: 'Uruchom główny terminal pod masztem [E]', interior: 'bunker', type: 'FINAL_TERMINAL' });
 
-// START GRY I STEROWANIE
+statusBar.innerText = 'Silnik 3D PBR gotowy! Wybierz klasę i kliknij WEJDŹ NA OSIEDLE.';
+
+// 4. LOGIKA ROZGRYWKI I STEROWANIE
 let gameStarted = false;
 function startGame() {
   player.nick = document.getElementById('player-nick').value.trim() || 'Agent_Łazy';
@@ -598,12 +809,12 @@ function updateInventoryUI() {
   if (player.activeSlot === 0) {
     document.getElementById('hand-item-title').innerText = cls.gadgetName;
     document.getElementById('hand-item-sub').innerText = cls.gadgetHint;
-    gunMesh.visible = false;
+    gunGroup.visible = false;
   } else {
     const item = player.inventory[player.activeSlot - 1];
     document.getElementById('hand-item-title').innerText = item ? ITEM_CATALOG[item.key].name : 'Puste ręce';
     document.getElementById('hand-item-sub').innerText = item ? ITEM_CATALOG[item.key].hint : 'Podejdź do przedmiotu i naciśnij [E]';
-    gunMesh.visible = !!(item && ITEM_CATALOG[item.key].type === 'weapon');
+    gunGroup.visible = !!(item && ITEM_CATALOG[item.key].type === 'weapon');
   }
 }
 
@@ -612,9 +823,9 @@ document.addEventListener('mousedown', e => {
   if (player.activeSlot === 0) {
     if (player.playerClass === 'medic') {
       itemsState.uvMode = !itemsState.uvMode;
-      flashlight.color.setHex(itemsState.uvMode ? 0xa855f7 : 0xfffbeb);
+      flashlight.color.setHex(itemsState.uvMode ? 0xa855f7 : 0xf8fafc);
     } else if (player.playerClass === 'tech') {
-      const dist = Math.round(camera.position.distanceTo(new THREE.Vector3(14, 1.75, 110)));
+      const dist = Math.round(camera.position.distanceTo(new THREE.Vector3(14, 1.72, 110)));
       showModal('SKANER CZĘSTOTLIWOŚCI RF', `Sygnał 433.92 MHz wykryty!\nOdległość od nadajnika przy Alei Krakowskiej: ${dist} m.`);
     } else if (player.playerClass === 'detective') {
       showModal('DEKODER POLICYJNY', 'Tropy prowadzą z ul. Papierowej przez Carrefour Express do warsztatów przy Alei Krakowskiej.');
@@ -628,7 +839,11 @@ document.addEventListener('mousedown', e => {
   if (!item) return;
   const def = ITEM_CATALOG[item.key];
   if (def.type === 'weapon' && item.ammo > 0) {
-    item.ammo--; updateInventoryUI();
+    item.ammo--;
+    muzzleFlash.intensity = 18;
+    gunGroup.position.z = 0.08;
+    setTimeout(() => { muzzleFlash.intensity = 0; gunGroup.position.z = 0; }, 70);
+    updateInventoryUI();
   } else if (def.type === 'heal') {
     player.hp = Math.min(100, player.hp + 45); player.inventory[slotIdx] = null; updateInventoryUI();
   } else if (def.type === 'battery') {
@@ -661,7 +876,7 @@ function handleInteract() {
     exteriorGroup.visible = false;
     Object.values(interiors).forEach(r => r.group.visible = false);
     interiors[obj.targetInterior].group.visible = true;
-    camera.position.set(0, 1.75, interiors[obj.targetInterior].depth / 2 - 2.0);
+    camera.position.set(0, 1.72, interiors[obj.targetInterior].depth / 2 - 2.0);
   } else if (obj.type === 'EXIT_INTERIOR') {
     const cur = interiors[worldState.currentInterior];
     worldState.isInside = false; worldState.currentInterior = null;
@@ -676,7 +891,7 @@ function handleInteract() {
     document.getElementById('evidence-modal').style.display = 'flex';
   } else if (obj.type === 'FINAL_TERMINAL') {
     if (!player.inventory.some(s => s && s.key === 'fuse')) {
-      showModal('BRAK ZASILANIA', 'Potrzebujesz bezpiecznika 40A z warsztatu Lion\'s Garage.');
+      showModal('BRAK ZASILANIA', "Potrzebujesz bezpiecznika 40A z warsztatu Lion's Garage.");
     } else {
       showModal('FINAŁ ŚLEDZTWA – ARCHIWUM ODBLOKOWANE!', 'Nadajnik przy Alei Krakowskiej był nadzorowany przez rzekomo zaginionego sąsiada z Segmentu nr 4! Gratulacje!');
     }
@@ -694,8 +909,8 @@ function showModal(title, body) {
 function verifySafeCode() {
   if (document.getElementById('safe-code-input').value === '2318') {
     document.getElementById('evidence-modal').style.display = 'none';
-    spawnWorldDrop('glock17', new THREE.Vector3(3.8, 0.85, -4.8), 'segment4', 1, 15);
-    showModal('SEJF OTWARTY!', 'W środku leży pistolet Glock-17 z tłumikiem!');
+    spawnWorldDrop('glock17', new THREE.Vector3(3.8, 0.88, -4.8), 'segment4', 1, 15);
+    showModal('SEJF OTWARTY!', 'W środku leży pistolet Glock-17 z tłumikiem! Zabierz go lub przekaż Śledczemu.');
   } else {
     alert('Błędny kod! Użyj latarki UV przy wejściu do Segmentu nr 4.');
   }
@@ -779,9 +994,10 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => keys[e.code] = false);
 
+// 5. PĘTLA RENDEROWANIA (Zmierzch -> Gęsta noc w 20 min + kołysanie kamery przy chodzeniu)
 const miniCtx = document.getElementById('minimap').getContext('2d');
-const sunsetSky = new THREE.Color(0x3b1812);
-const nightSky = new THREE.Color(0x03060c);
+const duskSky = new THREE.Color(0x0d131c);
+const nightSky = new THREE.Color(0x020408);
 const clock = new THREE.Clock();
 
 function animate() {
@@ -790,28 +1006,49 @@ function animate() {
 
   worldState.elapsedMinutes += dt / 60;
   const t = Math.min(1, worldState.elapsedMinutes / 20);
-  scene.background.lerpColors(sunsetSky, nightSky, t);
-  scene.fog.color.lerpColors(sunsetSky, nightSky, t);
-  scene.fog.density = 0.010 + t * 0.018;
-  sunLight.intensity = 1.8 * (1 - t) + 0.15;
+  scene.background.lerpColors(duskSky, nightSky, t);
+  scene.fog.color.lerpColors(duskSky, nightSky, t);
+  scene.fog.density = 0.022 + t * 0.014;
+  moonLight.intensity = 0.55 * (1 - t) + 0.12;
+  hemiLight.intensity = 0.42 * (1 - t) + 0.15;
 
-  const totalMins = 16 * 60 + 42 + Math.floor(worldState.elapsedMinutes);
-  document.getElementById('world-clock').innerText = `${String(Math.floor(totalMins / 60) % 24).padStart(2, '0')}:${String(totalMins % 60).padStart(2, '0')} (${t < 0.35 ? 'Zachód' : 'Noc'})`;
+  const totalMins = 17 * 60 + 15 + Math.floor(worldState.elapsedMinutes);
+  document.getElementById('world-clock').innerText = `${String(Math.floor(totalMins / 60) % 24).padStart(2, '0')}:${String(totalMins % 60).padStart(2, '0')} (${t < 0.45 ? 'Zmierzch' : 'Mglista noc'})`;
 
   uvClues.forEach(u => u.mesh.material.opacity = (itemsState.uvMode && u.interior === worldState.currentInterior) ? 0.95 : 0.0);
   itemsState.worldDrops.forEach(d => { d.mesh.visible = (d.interior === worldState.currentInterior); d.mesh.rotation.y += dt * 1.5; });
 
   if (gameStarted) {
     const isSprinting = keys['ShiftLeft'] && player.stamina > 5;
-    const speed = (isSprinting ? 9.5 : 5.5) * dt;
+    const speed = (isSprinting ? 8.8 : 4.8) * dt;
     const forward = new THREE.Vector3(-Math.sin(player.yaw), 0, -Math.cos(player.yaw));
     const right = new THREE.Vector3(Math.cos(player.yaw), 0, -Math.sin(player.yaw));
 
-    if (keys['KeyW']) camera.position.addScaledVector(forward, speed);
-    if (keys['KeyS']) camera.position.addScaledVector(forward, -speed);
-    if (keys['KeyA']) camera.position.addScaledVector(right, -speed);
-    if (keys['KeyD']) camera.position.addScaledVector(right, speed);
+    let moving = false;
+    if (keys['KeyW']) { camera.position.addScaledVector(forward, speed); moving = true; }
+    if (keys['KeyS']) { camera.position.addScaledVector(forward, -speed); moving = true; }
+    if (keys['KeyA']) { camera.position.addScaledVector(right, -speed); moving = true; }
+    if (keys['KeyD']) { camera.position.addScaledVector(right, speed); moving = true; }
+
+    // Realistyczne kołysanie kamery i dłoni podczas marszu (head-bob)
+    if (moving) {
+      const bobFreq = isSprinting ? 13 : 8.5;
+      camera.position.y = 1.72 + Math.sin(clock.elapsedTime * bobFreq) * 0.035;
+      handsGroup.position.y = Math.cos(clock.elapsedTime * bobFreq) * 0.008;
+      if (isSprinting && player.adrenalineTimer <= 0) player.stamina = Math.max(0, player.stamina - 18 * dt);
+    } else {
+      camera.position.y += (1.72 - camera.position.y) * 0.15;
+      player.stamina = Math.min(100, player.stamina + 12 * dt);
+    }
   }
+
+  if (flashlight.visible) player.battery = Math.max(0, player.battery - 0.3 * dt);
+  document.getElementById('hp-bar').style.width = `${player.hp}%`;
+  document.getElementById('hp-val').innerText = `${Math.round(player.hp)}%`;
+  document.getElementById('stamina-bar').style.width = `${player.stamina}%`;
+  document.getElementById('stamina-val').innerText = `${Math.round(player.stamina)}%`;
+  document.getElementById('battery-bar').style.width = `${player.battery}%`;
+  document.getElementById('battery-val').innerText = `${Math.round(player.battery)}%`;
 
   hoveredTarget = null;
   const prompt = document.getElementById('interact-prompt');
@@ -835,7 +1072,7 @@ function animate() {
     }
   }
 
-  miniCtx.fillStyle = '#060a10'; miniCtx.fillRect(0, 0, 155, 155);
+  miniCtx.fillStyle = '#04070c'; miniCtx.fillRect(0, 0, 155, 155);
   miniCtx.strokeStyle = '#334155'; miniCtx.lineWidth = 4;
   miniCtx.beginPath(); miniCtx.moveTo(77, 25); miniCtx.lineTo(77, 115); miniCtx.moveTo(20, 75); miniCtx.lineTo(135, 75); miniCtx.stroke();
   miniCtx.fillStyle = '#facc15'; miniCtx.beginPath(); miniCtx.arc(77 + camera.position.x * 0.65, 40 + camera.position.z * 0.65, 4, 0, Math.PI * 2); miniCtx.fill();
